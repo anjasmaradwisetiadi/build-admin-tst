@@ -29,9 +29,15 @@ import Navbar from '../src/components/Navbar.vue'
 import Sidebar from '@/components/Sidebar.vue'
 import { useSidebarControlStore } from '@/stores/Sidebar';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/AuthStore';
 
+const authStore = useAuthStore()
 const router = useRouter();
 const nameRoutePath = ref(router.currentRoute.value);
+
+const checkAutoLogout = computed(()=>{
+  return authStore.checkUserExpired()
+})
 
 watch(() => router.currentRoute.value, fetchData, { immediate: true })
 
@@ -39,6 +45,19 @@ async function fetchData(data) {
     nameRoutePath.value = data.name;
 }
 
+watch(checkAutoLogout, (newValue, oldValue)=>{
+  if(newValue){
+    authStore.autoLogout();
+  }
+})
+
+onBeforeMount(()=>{
+  authStore.autoLogout()
+})
+
+onMounted(()=>{
+  authStore.autoLogout()
+})
 
 </script>
 

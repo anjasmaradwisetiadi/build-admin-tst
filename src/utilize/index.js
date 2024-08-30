@@ -9,9 +9,9 @@ export const utilize = {
         return word
     },
 
-    emailFormat(data){
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(data)
+    phoneNumberFormat(data){
+        const phonePattern = /[0-9]/;
+        return phonePattern.test(data)
     },
 
     convertTimeDate(date){

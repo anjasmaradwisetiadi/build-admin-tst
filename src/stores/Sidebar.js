@@ -10,8 +10,6 @@ export const useSidebarControlStore = defineStore('sidebarControl', {
 
   actions:{
     sidebarIsOpen(val) {
-        console.log("val = ")
-        console.log(val)
       this.open = val
     },
   },

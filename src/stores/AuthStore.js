@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
                 const makeExpiredTime = this.makeExpiredTime(1399);
                 let payload = {
                     'expired_time': makeExpiredTime,
-                    ...resp.data.data
+                    ...resp.data
                 }
                 localStorage.setItem('user', JSON.stringify(payload));
                 this.loading = false;

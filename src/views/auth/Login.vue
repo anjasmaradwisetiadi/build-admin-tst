@@ -1,14 +1,13 @@
 <template>
     <!-- ********* trigger loading   -->
-  <div v-if="getLoading">
-    <div
-        id="modal-bg" class="w-full h-full z-20 absolute top-0 absolute blur-background">
-    </div>
-    <div 
-        class="sm:w-[385px] sm:min-w-[30vw] min-w-[60vw] min-h-[30vh] flex flex-col items-center gap-2 -translate-y-1/2 p-6 top-1/2 left-1/2 -translate-x-1/2 absolute z-20">
-        <img src="../../assets/animated/spinner.svg" alt="spinner">
-    </div>
-  </div>
+    <Teleport
+        id="ModalEvent" 
+        class="z-40"
+        to="body"
+        v-if="getLoading"
+     >
+            <Loading></Loading>
+     </Teleport>
   <!-- ********* form   -->
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen  min-h-screen">
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -22,10 +21,10 @@
               >     
                   <div class="flex flex-col">
                     <div>
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
-                        <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com">
-                        <span class="invalid-feedback" v-if="isEmail"> Please fill email required</span>
-                        <span class="invalid-feedback" v-if="!isEmail && isFormatEmail"> Please fill use email format correct</span>
+                        <label for="phoneNumber" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Phone Number</label>
+                        <input type="text" name="phoneNumber" id="phoneNumber" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com">
+                        <span class="invalid-feedback" v-if="isFormatPhoneNumber"> Please fill phone number required</span>
+                        <span class="invalid-feedback" v-if="!isPhoneNumber && isFormatPhoneNumber"> Please fill only number format correct</span>
                     </div>
                   </div>
                   <div>
@@ -56,74 +55,75 @@ import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
 import { useRouter } from 'vue-router';
 import { utilize } from '@/utilize/index';
 import { HandleError } from '@/utilize/HandleError';
-// import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from '@/stores/AuthStore';
+import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
 
-// const authStore = useAuthStore()
+const authStore = useAuthStore()
 const router = useRouter();
 
-const isEmail = ref(false);
-const isFormatEmail = ref(false);
+const isPhoneNumber = ref(false);
+const isFormatPhoneNumber = ref(false);
 const isPassword = ref(false);
-// 
-// const getLoginResponse = computed(()=>{
-//     return authStore.loginResponse
-// })
-// 
-// const getLoading = computed(()=>{
-//     return authStore.loading;
-// })
-// 
-// watch(getLoginResponse, (newValue, oldValue)=>{
-//     if( newValue?.status === 200 && newValue?.data.message === 'Success'){
-//         Swal.fire({
-//             title: "Success Login",
-//             text: "You will redirect to dashboard",
-//             icon: "success",
-//             confirmButtonColor: '#38bdf8',
-//             confirmButtonText: "Yes",
-//         }).then((result)=>{
-//             if (result.isConfirmed || result.isDismissed) {
-//                 authStore.loginResponse = null
-//                 authStore.loading = false;
-//                 
-//                 router.push('/activity')
-//             }
-//         })
-//     } else if(newValue?.status === 400) {
-//         authStore.loginResponse = null
-//         authStore.loading = false;
-//         errorHandle.errorMessage(newValue?.data?.message)
-//     } else {
-//         return
-//     }
-// })
-// 
-// const onSubmit = ($event) => {
-//     $event.preventDefault();
-// 
-//     if(checkValidity($event)){
-//         const payload = {
-//             email: $event.target.email.value,
-//             password: $event.target.password.value
-//         }
-//         authStore.login(payload)
-//     } else {
-//         errorHandle.errorMessage('Check your field email or password')
-//     }
-// }
-// 
-// const checkValidity = (data) =>{
-//    const requiredEmail =  data.target.email.value.length ? false : true;
-//    const formatEmail = utilize.emailFormat(data.target.email.value) ? false : true;
-//    const requiredPassword = data.target.password.value.length ? false : true;
-// 
-//    isEmail.value = requiredEmail;
-//    isFormatEmail.value = formatEmail;
-//    isPassword.value =  requiredPassword;
-// 
-//    return !requiredEmail && !requiredPassword && !formatEmail
-// }
+
+const getLoginResponse = computed(()=>{
+    return authStore.loginResponse
+})
+
+const getLoading = computed(()=>{
+    return authStore.loading;
+})
+
+watch(getLoginResponse, (newValue, oldValue)=>{
+    if( newValue?.status === 200 && newValue?.data?.response_message.toLowerCase() === 'ok'){
+        Swal.fire({
+            title: "Success Login",
+            text: "You will redirect to dashboard",
+            icon: "success",
+            confirmButtonColor: '#38bdf8',
+            confirmButtonText: "Yes",
+        }).then((result)=>{
+            if (result.isConfirmed || result.isDismissed) {
+                authStore.loginResponse = null
+                authStore.loading = false;
+                
+                router.push('/dashboard')
+            }
+        })
+    } else if(newValue?.status === 400) {
+        authStore.loginResponse = null
+        authStore.loading = false;
+        errorHandle.errorMessage(newValue?.data?.message)
+    } else {
+        return
+    }
+})
+
+const onSubmit = ($event) => {
+    $event.preventDefault();
+
+    if(checkValidity($event)){
+        const payload = {
+            phone: $event.target.phoneNumber.value,
+            password: $event.target.password.value
+        }
+        authStore.login(payload)
+    } else {
+        errorHandle.errorMessage('Check your field email or password')
+    }
+}
+
+const checkValidity = (data) =>{
+   const requiredPhoneNumber =  data.target.phoneNumber.value.length ? false : true;
+   const formatPhoneNumber = utilize.phoneNumberFormat(data.target.phoneNumber.value) ? false : true;
+   const requiredPassword = data.target.password.value.length ? false : true;
+
+   isPhoneNumber.value = requiredPhoneNumber;
+   isFormatPhoneNumber.value = formatPhoneNumber;
+   isPassword.value =  requiredPassword;
+
+   return !requiredPhoneNumber && !requiredPassword && !formatPhoneNumber
+}
 </script>
 
 <style scoped>
