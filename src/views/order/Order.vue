@@ -1,0 +1,29 @@
+<template>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">order Component</div>
+
+                    <div class="card-body">
+                        I'm an order component.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style scoped>
+    .page-not-found{
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        display: flex;
+    }
+</style>
