@@ -127,7 +127,6 @@ onMounted(()=>{
 
 watch(getIsSidebarOpen, (newValue, oldValue)=>{
   if(newValue){
-    console.log("open navbar =", newValue)
     isSidebarOpen.value = newValue
   }
 })
@@ -185,7 +184,6 @@ function goBack(){
 }
 
 function goToProfile(){
-    console.log("go to profile = ")
     router.push('/profile')
 }
 
