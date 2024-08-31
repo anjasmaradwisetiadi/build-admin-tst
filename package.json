@@ -15,7 +15,9 @@
     "flowbite": "^2.5.1",
     "material-symbols": "^0.22.0",
     "pinia": "^2.1.7",
+    "primevue": "^4.0.5",
     "sweetalert2": "^11.12.4",
+    "tailwindcss-primeui": "^0.3.4",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
