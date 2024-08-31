@@ -40,15 +40,30 @@ import {ref, onMounted, reactive, computed} from "vue";
 import Chart from 'primevue/chart';
 import {summaryMonthlyOrder, summaryYearlyOrder} from "@/utilize/DataDummy.js";
 import DatePicker from 'primevue/datepicker';
+import { useSummaryStore } from "@/stores/SummaryStore";
+
+const summaryStore = useSummaryStore()
 
 const startDate = ref(new Date('2024-01-12'));
 const endDate = ref(new Date());
-const getLoading = ref(false)
-
 
 onMounted(() => {
   chartOptions.value = setChartOptions();
+  // ******** trigger
+  // summaryStore.yearlyOrder(params)
 });
+
+const getLoading = computed(()=>{
+  return summaryStore.loadingOrderComparison
+})
+
+const getError = computed(()=>{
+  return summaryStore.orderComparisonResponseError
+})
+
+const getResponse = computed(()=>{
+  return summaryStore.orderComparisonResponseError
+})
 
 //todo from API
 const chartDataRaw = reactive(summaryYearlyOrder);

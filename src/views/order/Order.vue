@@ -6,7 +6,11 @@
                     <h1 class="text-lg font-semibold">Orders Table</h1>
                 </div>
                 <div class="p-4 border rounded-b-md bg-white">
-                    <div class="w-full flex flex-row flex-wrap lg:flex-nowrap">
+                    <div class="flex justify-end space-x-2">
+                        <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" @click="applyReset()">RESET</button>
+                        <button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" @click="applyFilter()">APPLY</button>
+                    </div>
+                    <div class="w-full flex flex-row flex-wrap lg:flex-nowrap my-3 ">
                         <div class="flex flex-col mr-2 w-full lg:w-[10rem] mt-1.5">
                             <span> Search Item </span>
                             <input 
@@ -90,10 +94,6 @@
                                 </Select>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex justify-end my-4 space-x-2">
-                        <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" @click="applyReset()">RESET</button>
-                        <button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" @click="applyFilter()">APPLY</button>
                     </div>
                     <div class="flex w-full overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 overflow-x-auto">

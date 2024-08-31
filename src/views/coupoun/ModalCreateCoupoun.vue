@@ -1,11 +1,11 @@
 <template>
     <div id="ModalCreateCoupoun">
         <div
-            v-if=" props?.isOpenModal && props?.nameModal === 'update_profile'"
+            v-if=" props?.isOpenModal"
             id="modal-bg" class="w-full h-full z-50 fixed top-0 left-0 blur-background overflow-hidden">
         </div>
         <div
-            v-if="props?.isOpenModal && props?.nameModal === 'update_profile'" 
+            v-if="props?.isOpenModal" 
             class="w-[385px] min-w-[30vw] lg:w-[385px] lg:min-w-[30vw] lg:min-h-[20vh] flex flex-col items-center gap-2 -translate-y-1/2 bg-white rounded-lg top-1/2 left-1/2 -translate-x-1/2 shadow-md z-50 border border-solid border-gray-200 fixed">
             <header class="flex w-full justify-between py-6 px-6 border-b border-gray-400">
                 <div>
@@ -18,7 +18,62 @@
                 </div>
             </header>
             <main class="w-full px-6 py-3">
-                <div> Testing Update Profile</div>
+                <div class="flex flex-col" v-if="props?.nameModal !== 'update_coupoun'">
+                    <div>
+                        Name*
+                    </div>
+                    <div>
+                        <input
+                            v-model="name"
+                            id="name"
+                            name="name"
+                            autocomplete="Name"
+                            type="text"
+                            required
+                            class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
+                            placeholder="Name"
+                            :disabled="isEdit"
+                        />
+                        <small v-if="isNameError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                    </div>
+                </div>
+                <div class="flex flex-col mt-1.5" v-if="props?.nameModal !== 'update_coupoun'">
+                    <div>
+                        Code*
+                    </div>
+                    <div>
+                        <input
+                            v-model="code"
+                            id="code"
+                            name="code"
+                            autocomplete="code"
+                            type="text"
+                            required
+                            class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
+                            placeholder="Code"
+                            :disabled="isEdit"
+                        />
+                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                    </div>
+                </div>
+                <div class="flex flex-col mt-1.5">
+                    <div>
+                        Start Date*
+                    </div>
+                    <div class="w-full">
+                        <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" class="w-full" />
+                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                    </div>
+                </div>
+                <div class="flex flex-col mt-1.5">
+                    <div>
+                        End Date*
+                    </div>
+                    <div class="w-full">
+                        <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" class="w-full" />
+                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                    </div>
+                </div>
             </main>
             <footer class="flex w-full justify-end px-6">
                 <div class="flex ">
@@ -39,6 +94,8 @@
 <script setup>
   import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
   import { handleError } from '@/utilize/HandleError';
+  import DatePicker from 'primevue/datepicker';
+
   const props = defineProps({
     loading:{
         default: false
@@ -72,6 +129,13 @@
   const emit = defineEmits([
     'isOpenModelCloseGeneral',
   ]);
+  const code = ref('')
+  const name = ref('')
+  const startDate = ref(new Date('2024-01-12'));
+  const endDate = ref(new Date());
+  
+  const isNameError = ref(false)
+  const isCodeError = ref(false)
 
   const checkValidty = () => {
 //         const nameValidty = nameActivity.value ? false : true

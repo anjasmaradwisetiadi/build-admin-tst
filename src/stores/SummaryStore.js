@@ -2,10 +2,23 @@ import { defineStore } from 'pinia'
 import instanceAxios from '@/utilize/InstanceAxios'
 import { useRouter } from 'vue-router';
 
-export const useListStore = defineStore('list', {
+export const useSummaryStore = defineStore('summary', {
   state : () =>{
     return {
-      loading: false,
+      loadingMonthly: false,
+      loadingYearly: false,
+      loadingOrderComparison: false,
+      loadingTopProduct: false,
+      loadingTopBuyer: false,
+      loadingTopStore: false,
+
+      monthlyResponseError: null,
+      yearlyResponseError: null,
+      orderComparisonResponseError: null,
+      topProductResponseError: null,
+      topBuyerResponseError: null,
+      topStoreResponseError: null,
+
       monthlyResponse: null,
       yearlyResponse: null,
       orderComparisonResponse: null,
@@ -18,85 +31,86 @@ export const useListStore = defineStore('list', {
   actions:{
 
     async monthlyOrder(params){
-      this.loading = true;
+      this.loadingMonthly = true;
       // it need params filter and sort on monthly order 
       await instanceAxios.get(`common/v1/summaries/orders/monthly${params}`)
           .then((response)=>{
               this.monthlyResponse = response.data
-              this.loading = false;
+              this.loadingMonthly = false;
           })
           .catch((error)=>{
-              this.errorResponse = true
-              this.loading = false;
+              this.monthlyResponseError = true
+              this.loadingMonthly = false;
           })
     },
     async yearlyOrder(params){
-        this.loading = true;
+        this.loadingYearly = true;
         // it need params filter and sort on monthly order 
         await instanceAxios.get(`common/v1/summaries/orders/yearly${params}`)
             .then((response)=>{
                 this.yearlyResponse = response.data
-                this.loading = false;
+                this.loadingYearly = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
+                this.yearlyResponseError = true
+                this.loadingYearly = false;
             })
     },
 
+
     async orderComparison(){
-        this.loading = true;
+        this.loadingOrderComparison = true;
         // it need params filter and sort on monthly order 
         await instanceAxios.get(`common/v1/summaries/orders/comparison`)
             .then((response)=>{
                 this.orderComparisonResponse = response.data
-                this.loading = false;
+                this.loadingOrderComparison = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
+                this.orderComparisonResponseError = true
+                this.loadingOrderComparison = false;
             })
     },
 
     async topProduct(params){
-        this.loading = true;
+        this.loadingTopProduct = true;
         // it need params filter and sort on monthly order 
         await instanceAxios.get(`common/v1/summaries/top/products${params}`)
             .then((response)=>{
                 this.topProductResponse = response.data
-                this.loading = false;
+                this.loadingTopProduct = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
+                this.topProductResponseError = true
+                this.loadingTopProduct = false;
             })
     },
 
     async topBuyer(params){
-        this.loading = true;
+        this.loadingTopBuyer = true;
         // it need params filter and sort on monthly order 
         await instanceAxios.get(`common/v1/summaries/top/buyers${params}`)
             .then((response)=>{
                 this.topBuyerResponse = response.data
-                this.loading = false;
+                this.loadingTopBuyer = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
+                this.topBuyerResponseError = true
+                this.loadingTopBuyer = false;
             })
     },
 
     async topStore(params){
-        this.loading = true;
+        this.loadingTopStore = true;
         // it need params filter and sort on monthly order 
         await instanceAxios.get(`common/v1/summaries/top/stores${params}`)
             .then((response)=>{
                 this.topStoreResponse = response.data
-                this.loading = false;
+                this.loadingTopStore = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
-                this.loading = false;
+                this.topStoreResponseError = true
+                this.loadingTopStore = false;
             })
     },
   },

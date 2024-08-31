@@ -68,16 +68,18 @@
 <script setup>
 import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, Teleport} from 'vue';
 import { dataDummyEmployee, topStore } from '@/utilize/DataDummy';
-const datas = ref(topStore)
 // const getDetailRespons = ref(detailOrders)
 import { useRouter } from 'vue-router';
 import { useCouponStore } from '@/stores/CS/OrdersStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 import Select from 'primevue/select';
+import { useSummaryStore } from "@/stores/SummaryStore";
 
+const datas = ref(topStore)
+
+const summaryStore = useSummaryStore()
 const router = useRouter();
 const couponStore = useCouponStore()
-const getLoading = ref(false)
 
 const limit = ref({ name: 5})
 const limitOption = ref([
@@ -86,17 +88,22 @@ const limitOption = ref([
     { name: 20},
 ])
 
-// const getLoading = computed(()=>{
-//     return couponStore.loading
-// })
-// 
-// const getDetailRespons = computed(()=>{
-//     return couponStore.detailResponse
-// })
-// 
-// const getError = computed(()=>{
-//     return couponStore.errorResponse
-// })
+onMounted(()=>{
+  // ******** trigger
+  // summaryStore.topStore(params)
+})
+
+const getLoading = computed(()=>{
+    return summaryStore.loadingTopStore
+})
+
+const getRespons = computed(()=>{
+    return summaryStore.topStoreResponse
+})
+
+const getError = computed(()=>{
+    return summaryStore.topStoreResponseError
+})
 // 
 // 
 // const detailOrders = () =>{
@@ -104,9 +111,6 @@ const limitOption = ref([
 //     couponStore.orderDetail(payloadSlug);
 // }
 // 
-// onMounted(()=>{
-//     detailOrders();
-// })
 
 
 

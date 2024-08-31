@@ -73,10 +73,12 @@ import { useRouter } from 'vue-router';
 import { useCouponStore } from '@/stores/CS/OrdersStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 import Select from 'primevue/select';
+import { useSummaryStore } from "@/stores/SummaryStore";
+
+const summaryStore = useSummaryStore()
 
 const router = useRouter();
 const couponStore = useCouponStore()
-const getLoading = ref(false)
 
 const limit = ref({ name: 5})
 const limitOption = ref([
@@ -85,27 +87,30 @@ const limitOption = ref([
     { name: 20},
 ])
 
-// const getLoading = computed(()=>{
-//     return couponStore.loading
-// })
-// 
-// const getDetailRespons = computed(()=>{
-//     return couponStore.detailResponse
-// })
-// 
-// const getError = computed(()=>{
-//     return couponStore.errorResponse
-// })
-// 
+onMounted(()=>{
+  // ******** trigger
+  // summaryStore.topBuyer(params)
+})
+
+
+const getLoading = computed(()=>{
+  return summaryStore.loadingTopBuyer
+})
+
+const getError = computed(()=>{
+  return summaryStore.topBuyerResponseError
+})
+
+const getResponse = computed(()=>{
+  return summaryStore.topBuyerResponse
+})
+
 // 
 // const detailOrders = () =>{
 //     const payloadSlug = router.currentRoute.value.params.id;
 //     couponStore.orderDetail(payloadSlug);
 // }
 // 
-// onMounted(()=>{
-//     detailOrders();
-// })
 
 
 

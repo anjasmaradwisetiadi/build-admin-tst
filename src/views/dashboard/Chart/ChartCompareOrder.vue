@@ -26,15 +26,31 @@
 import {ref, onMounted, reactive, computed} from "vue";
 import Chart from 'primevue/chart';
 import {summaryMonthlyOrder, summaryOrderComparison, summaryYearlyOrder} from "@/utilize/DataDummy.js";
+import { useSummaryStore } from "@/stores/SummaryStore";
+
+const summaryStore = useSummaryStore()
 
 onMounted(() => {
   chartOptions.value = setChartOptions();
+  // ******** trigger
+  // summaryStore.orderComparison()
 });
+
+const getLoading = computed(()=>{
+  return summaryStore.loadingOrderComparison
+})
+
+const getError = computed(()=>{
+  return summaryStore.orderComparisonResponseError
+})
+
+const getResponse = computed(()=>{
+  return summaryStore.orderComparisonResponseError
+})
 
 //todo from API
 const chartDataRaw = reactive(summaryOrderComparison);
 const chartOptions = ref();
-const getLoading = ref(false)
 
 const chartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement);
