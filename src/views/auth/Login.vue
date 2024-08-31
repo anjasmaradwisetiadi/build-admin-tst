@@ -6,7 +6,7 @@
         to="body"
         v-if="getLoading"
      >
-            <Loading></Loading>
+        <Loading></Loading>
      </Teleport>
   <!-- ********* form   -->
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen  min-h-screen">
@@ -55,8 +55,8 @@ import { useRouter } from 'vue-router';
 import { utilize } from '@/utilize/index';
 import { handleError } from '@/utilize/HandleError';
 import { useAuthStore } from '@/stores/AuthStore';
-import Loading from '@/components/Loading.vue';
 import Swal from 'sweetalert2';
+import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 
 const authStore = useAuthStore()
 const router = useRouter();
@@ -72,6 +72,11 @@ const getLoginResponse = computed(()=>{
 const getLoading = computed(()=>{
     return authStore.loading;
 })
+
+const getError = computed(()=>{
+    return authStore.errorResponse;
+})
+
 
 watch(getLoginResponse, (newValue, oldValue)=>{
     if( newValue?.status === 200 && newValue?.data?.response_message.toLowerCase() === 'ok'){
@@ -89,10 +94,8 @@ watch(getLoginResponse, (newValue, oldValue)=>{
                 router.push('/dashboard')
             }
         })
-    } else if(newValue?.status === 400) {
-        authStore.loginResponse = null
-        authStore.loading = false;
-        errorHandle.errorMessage(newValue?.data?.message)
+    } else if(newValue?.status !== 200) {
+        handleError.errorMessage(newValue?.message)
     } else {
         return
     }
@@ -108,7 +111,7 @@ const onSubmit = ($event) => {
         }
         authStore.login(payload)
     } else {
-        errorHandle.errorMessage('Check your field email or password')
+        handleError.errorMessage('Check your field email or password')
     }
 }
 

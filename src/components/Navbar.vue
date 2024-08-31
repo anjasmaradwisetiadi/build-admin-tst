@@ -1,13 +1,5 @@
 <template>
     <!-- ********* trigger loading   -->
-     <Teleport
-        id="ModalEvent" 
-        class="z-40"
-        to="body"
-        v-if="getLoading"
-     >
-            <Loading></Loading>
-     </Teleport>
     <div id="Navbar">
         <transition name="fade">
             <div class="w-screen flex justify-center title text-center pb-3 pt-4 mb-8 px-3 z-20 fixed bg-sky-400 shadow-lg">

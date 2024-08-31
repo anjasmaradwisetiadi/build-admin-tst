@@ -3,7 +3,7 @@
         <div class="relative overflow-x-auto">
             <div class="p-4">
                 <div class="bg-blue-600 text-white py-2 px-4 rounded-t-md">
-                    <h1 class="text-lg font-semibold">Invitations Labels Table</h1>
+                    <h1 class="text-lg font-semibold">Orders Table</h1>
                 </div>
                 <div class="p-4 border rounded-b-md bg-white">
                     <div class="w-full flex flex-row flex-wrap lg:flex-nowrap">
@@ -128,9 +128,25 @@
                                         </a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap bg-gray-100" colspan="6">
-
+                                <tr
+                                    v-if="!getLoading && !getOrdersResponse?.items.length"
+                                >
+                                    <td class="px-6 py-4 whitespace-nowrap text-center" colspan="6">
+                                        Data Not Found
+                                    </td>
+                                </tr>
+                                <tr
+                                    v-if="getOrdersResponse?.total>10"
+                                >
+                                    <td 
+                                        class="px-6 py-4 whitespace-nowrap bg-gray-100" colspan="6">
+                                        <Paginator 
+                                            :rows="perRowsPageNumber" 
+                                            :totalRecords="getOrdersResponse?.total" 
+                                            :rowsPerPageOptions="[10, 20, 30]"
+                                            @page="onPageChange"
+                                        >
+                                        </Paginator>
                                     </td>
                                 </tr>
                                 <!-- Repeat rows as needed -->
@@ -142,16 +158,23 @@
             </div>
         </div>
     </div>
-    <LoadingAndAlert
-        :loading="getLoading"
-        :responseSwalError="getError"
-    >
+    <Teleport
+        id="ModalEvent" 
+        class="z-40"
+        to="body"
+        v-if="getLoading"
+     >
+        <LoadingAndAlert
+            :loading="getLoading"
+            :responseSwalError="getError"
+        >
 
-    </LoadingAndAlert>
+        </LoadingAndAlert>
+     </Teleport>
 </template>
 
 <script setup>
-    import { ref, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
+    import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, watchEffect, Teleport} from 'vue';
     import { dataDummyEmployee, listOrders } from '@/utilize/DataDummy';
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
@@ -159,15 +182,15 @@
     import { utilize } from '@/utilize';
     import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
     import { useRouter } from 'vue-router';
+    import Paginator from 'primevue/paginator';
 
 
     const couponStore = useCouponStore()
     const router = useRouter();
 
     const datas = ref(dataDummyEmployee)
-    const listOrdersDatas = ref(listOrders)
     const pageNumber = ref(1)
-    const perPageNumber = ref(10)
+    const perRowsPageNumber = ref(10)
     const selectedSortBy = ref({ name: 'Grand Total', value: 'grandtotal' });
     const selectedSortDirection = ref({ name: 'Desc', value: 'desc' });
     const buyerPhone = ref('');
@@ -200,17 +223,19 @@
         return couponStore.errorResponse
     })
 
+    watchEffect(() => 
+        getOrdersResponse,
+    { immediate: true })
+
     onMounted(()=>{
         couponStore.orderList(pagePayload())
     })
 
     const applyFilter = () =>{
-        console.log("new Date() = ")
-        console.log(new Date())
 
         const pagePayloadFilter = pagePayload(
             pageNumber.value,
-            perPageNumber.value,
+            perRowsPageNumber.value,
             selectedSortBy.value.value,
             selectedSortDirection.value.value,
             buyerPhone.value,
@@ -233,7 +258,7 @@
         storeCodeFilter='',
         couponCodeFilter='',
         searchByFilter='invoice_no',
-        startDateFilter=(new Date()),
+        startDateFilter=(new Date('2024-01-12')),
         endDateFilter=(new Date()),
         searchQueryFilter=''
     ) => {
@@ -279,10 +304,8 @@
     }
 
     const applyReset = () =>{
-        console.log("selectedSortDirection = ")
-        console.log(selectedSortDirection.value)
         pageNumber.value = 1
-        perPageNumber.value = 10
+        perRowsPageNumber.value = 10
         selectedSortBy.value = { name: 'Grand Total', value: 'grandtotal' }
         selectedSortDirection.value = { name: 'Desc', value: 'desc' }
         buyerPhone.value = ''
@@ -292,6 +315,30 @@
         startDate.value = new Date('2024-01-12')
         endDate.value = new Date()
         searchQuery.value = ''
+        couponStore.orderList(pagePayload())
+    }
+
+    const onPageChange = (event)=>{
+
+            pageNumber.value = event.page
+            perRowsPageNumber.value = event.rows
+
+            const pagePayloadFilter = pagePayload(
+                (event.page+1),
+                event.rows,
+                selectedSortBy.value.value,
+                selectedSortDirection.value.value,
+                buyerPhone.value,
+                storeCode.value,
+                couponCode.value,
+                searchBy.value,
+                startDate.value,
+                endDate.value,
+                searchQuery.value
+            )
+            couponStore.orderList(pagePayloadFilter)
+
+
     }
 
     const goToDetail = (id)=>{

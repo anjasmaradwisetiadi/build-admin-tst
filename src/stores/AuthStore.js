@@ -23,6 +23,7 @@ export const useAuthStore = defineStore('auth', {
         this.loading = true;
         await instanceAxios.post('common/v1/auth/login', payload)
             .then((resp)=>{
+                this.errorResponse = null
                 this.loginResponse = resp
                 const makeExpiredTime = this.makeExpiredTime(1399);
                 let payload = {
@@ -33,7 +34,13 @@ export const useAuthStore = defineStore('auth', {
                 this.loading = false;
             })
             .catch((error)=>{
-                this.loginResponse = error.response
+                const errorMessage = error?.response?.data
+                const payloadError = {
+                    status: error?.response?.status,
+                    message: errorMessage?.response_message
+                }
+                this.loginResponse = payloadError
+                this.errorResponse = payloadError
                 this.loading = false;
             })
     },

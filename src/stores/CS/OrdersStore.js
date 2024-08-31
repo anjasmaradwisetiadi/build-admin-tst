@@ -20,6 +20,7 @@ export const useCouponStore = defineStore('coupon', {
       // it need params filter and sort on coupoun  
       await instanceAxios.get(`customer-service/v1/orders?${params.concatFilterParams}`)
           .then((response)=>{
+              this.errorResponse = null
               this.ordersResponse = response.data
               this.loading = false;
           })
@@ -44,11 +45,16 @@ export const useCouponStore = defineStore('coupon', {
         // it need params filter and sort on coupoun  
         await instanceAxios.get(`customer-service/v1/orders/${id}`)
             .then((response)=>{
+                this.errorResponse = null
                 this.detailResponse = response.data
                 this.loading = false;
             })
             .catch((error)=>{
-                this.errorResponse = true
+                const payloadError= {
+                  status: true,
+                  message: ''
+                }
+                this.errorResponse = payloadError
                 this.loading = false;
             })
       },
