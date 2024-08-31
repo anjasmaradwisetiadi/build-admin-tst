@@ -19,7 +19,7 @@ export const useCouponStore = defineStore('coupon', {
     async couponList(params){
       this.loading = true;
       // it need params filter and sort on coupoun  
-      await instanceAxios.get(`coupons${params}`)
+      await instanceAxios.get(`customer-service/v1/coupons${params}`)
           .then((response)=>{
               this.couponResponse = response.data
               this.loading = false;
@@ -33,7 +33,7 @@ export const useCouponStore = defineStore('coupon', {
     async exportCoupon(params){
         this.loading = true;
         // it need params filter and sort on coupoun  
-        await instanceAxios.get(`coupons${params}`)
+        await instanceAxios.get(`customer-service/v1/coupons${params}`)
             .then((response)=>{
                 this.exportCoupounListResponse = response.data
                 this.loading = false;
@@ -47,7 +47,7 @@ export const useCouponStore = defineStore('coupon', {
     async couponDetail(id){
         this.loading = true;
         // it need params filter and sort on coupoun  
-        await instanceAxios.get(`coupons/${id}`)
+        await instanceAxios.get(`customer-service/v1/coupons/${id}`)
             .then((response)=>{
                 this.detailResponse = response.data
                 this.loading = false;
@@ -60,7 +60,7 @@ export const useCouponStore = defineStore('coupon', {
 
     async couponCreate(payload) {
         this.loading = true;
-        await instanceAxios.post('coupons', payload)
+        await instanceAxios.post('customer-service/v1/coupons', payload)
             .then((response)=>{
                 this.createResponse = response.data
                 this.loading = false;
@@ -73,7 +73,7 @@ export const useCouponStore = defineStore('coupon', {
 
     async couponEdit(id, payload) {
         this.loading = true;
-        await instanceAxios.patch(`coupons/${id}`, payload)
+        await instanceAxios.patch(`customer-service/v1/coupons/${id}`, payload)
             .then((response)=>{
                 this.updateResponse = response.data;
                 this.loading = false;

@@ -18,7 +18,7 @@ export const useListStore = defineStore('list', {
     async city(){
       this.loading = true;
 
-      await instanceAxios.get(`lists/cities`)
+      await instanceAxios.get(`common/v1/lists/cities`)
           .then((response)=>{
               this.citiesResponse = response.data
               this.loading = false;
@@ -31,7 +31,7 @@ export const useListStore = defineStore('list', {
     async coupun(){
         this.loading = true;
   
-        await instanceAxios.get(`lists/coupons`)
+        await instanceAxios.get(`common/v1/lists/coupons`)
             .then((response)=>{
                 this.couponsResponse = response.data
                 this.loading = false;
@@ -46,7 +46,7 @@ export const useListStore = defineStore('list', {
     async buyer(){
         this.loading = true;
   
-        await instanceAxios.get(`lists/buyers`)
+        await instanceAxios.get(`common/v1/lists/buyers`)
             .then((response)=>{
                 this.buyersResponse = response.data
                 this.loading = false;
@@ -60,7 +60,7 @@ export const useListStore = defineStore('list', {
     async stores(){
         this.loading = true;
   
-        await instanceAxios.get(`lists/stores`)
+        await instanceAxios.get(`common/v1/lists/stores`)
             .then((response)=>{
                 this.storesResponse = response.data
                 this.loading = false;

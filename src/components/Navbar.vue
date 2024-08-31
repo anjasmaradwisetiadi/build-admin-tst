@@ -85,7 +85,7 @@ import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
 import { useSidebarControlStore } from '@/stores/Sidebar';
 import { useRouter } from 'vue-router';
 import { utilize } from '@/utilize/index';
-import { HandleError } from '@/utilize/HandleError';
+import { handleError } from '@/utilize/HandleError';
 import { useAuthStore } from '@/stores/AuthStore';
 import Loading from '@/components/Loading.vue';
 

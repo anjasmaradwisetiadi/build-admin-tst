@@ -2,7 +2,7 @@ import axios from "axios"
 import Swal from "sweetalert2"
 import instanceAxios from "./InstanceAxios"
 
-export const HandleError = {
+export const handleError = {
   errorMessage(text = 'Something wrong please contact your admin'){
     Swal.fire({
       title: "Something Wrong",

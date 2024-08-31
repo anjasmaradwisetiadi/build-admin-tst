@@ -20,7 +20,7 @@ export const useListStore = defineStore('list', {
     async monthlyOrder(params){
       this.loading = true;
       // it need params filter and sort on monthly order 
-      await instanceAxios.get(`summaries/orders/monthly${params}`)
+      await instanceAxios.get(`common/v1/summaries/orders/monthly${params}`)
           .then((response)=>{
               this.monthlyResponse = response.data
               this.loading = false;
@@ -33,7 +33,7 @@ export const useListStore = defineStore('list', {
     async yearlyOrder(params){
         this.loading = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`summaries/orders/yearly${params}`)
+        await instanceAxios.get(`common/v1/summaries/orders/yearly${params}`)
             .then((response)=>{
                 this.yearlyResponse = response.data
                 this.loading = false;
@@ -47,7 +47,7 @@ export const useListStore = defineStore('list', {
     async orderComparison(){
         this.loading = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`summaries/orders/comparison`)
+        await instanceAxios.get(`common/v1/summaries/orders/comparison`)
             .then((response)=>{
                 this.orderComparisonResponse = response.data
                 this.loading = false;
@@ -61,7 +61,7 @@ export const useListStore = defineStore('list', {
     async topProduct(params){
         this.loading = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`summaries/top/products${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/products${params}`)
             .then((response)=>{
                 this.topProductResponse = response.data
                 this.loading = false;
@@ -75,7 +75,7 @@ export const useListStore = defineStore('list', {
     async topBuyer(params){
         this.loading = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`summaries/top/buyers${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/buyers${params}`)
             .then((response)=>{
                 this.topBuyerResponse = response.data
                 this.loading = false;
@@ -89,7 +89,7 @@ export const useListStore = defineStore('list', {
     async topStore(params){
         this.loading = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`summaries/top/stores${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/stores${params}`)
             .then((response)=>{
                 this.topStoreResponse = response.data
                 this.loading = false;

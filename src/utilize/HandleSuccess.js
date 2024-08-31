@@ -1,6 +1,6 @@
 import Swal from "sweetalert2"
 
-export const successHandle = {
+export const handleSuccess = {
     successSwalData(text = "create"){
         let textPrint  = ''
         if(text === 'create'){

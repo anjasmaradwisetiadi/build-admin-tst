@@ -38,7 +38,7 @@
 
 <script setup>
   import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
-  import { HandleError } from '@/utilize/HandleError';
+  import { handleError } from '@/utilize/HandleError';
   const props = defineProps({
     loading:{
         default: false
@@ -110,7 +110,7 @@
 //             resetState()
 //             emit('isOpenModelCloseGeneral', payload)   
         } else {
-            HandleError.errorMessage('Please fill required input')
+            handleError.errorMessage('Please fill required input')
         }
     } else {
         resetState()

@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', {
   actions:{
     async login(payload) {
         this.loading = true;
-        await instanceAxios.post('auth/login', payload)
+        await instanceAxios.post('common/v1/auth/login', payload)
             .then((resp)=>{
                 this.loginResponse = resp
                 const makeExpiredTime = this.makeExpiredTime(1399);
@@ -46,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
 
     async logout(){
         this.loading = true;
-        await instanceAxios.post('auth/logout')
+        await instanceAxios.post('common/v1/auth/logout')
             .then((resp)=>{
                 this.logoutResponse = resp
                 localStorage.removeItem('user');
@@ -77,7 +77,7 @@ export const useAuthStore = defineStore('auth', {
     async profile(){
       this.loading = true;
 
-      await instanceAxios.get(`auth/profile`)
+      await instanceAxios.get(`common/v1/auth/profile`)
           .then((response)=>{
               this.profileResponse = response.data
               this.loading = false;
@@ -91,7 +91,7 @@ export const useAuthStore = defineStore('auth', {
     async profileUpdate(payload){
       this.loading = true;
 
-      await instanceAxios.post(`auth/profile`, payload)
+      await instanceAxios.post(`common/v1/auth/profile`, payload)
           .then((response)=>{
               this.updateProfileResponse = response.data
               this.loading = false;
@@ -105,7 +105,7 @@ export const useAuthStore = defineStore('auth', {
     async passwordUpdate(payload){
       this.loading = true;
 
-      await instanceAxios.post(`auth/password`, payload)
+      await instanceAxios.post(`common/v1/auth/password`, payload)
           .then((response)=>{
               this.updatePasswordResponse = response.data
               this.loading = false;

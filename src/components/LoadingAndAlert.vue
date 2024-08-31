@@ -17,8 +17,8 @@
 
 <script setup>
 import { computed, watch, watchEffect } from 'vue';
-import { successHandle } from '@/utilize/HandleSuccess';
-import { errorHandle } from '@/utilize/HandleError';
+import { handleSuccess } from '@/utilize/HandleSuccess';
+import { handleError } from '@/utilize/HandleError';
 
 const props = defineProps({
     loading: {
@@ -32,7 +32,10 @@ const props = defineProps({
         }
     },
     responseSwalError:{
-        default: false
+        default: {
+            status: false,
+            message: ''
+        }
     }
 })
 
@@ -40,10 +43,10 @@ const responseSwalDisplay = computed(() => {
     const responseSwalError = props?.responseSwalError;
     const responseSwalSuccess = props?.responseSwalSuccess;
 
-    if(responseSwalError && !props.loading){
-        return errorHandle.errorMessage()
+    if(responseSwalError?.status && !props.loading){
+        return handleError.errorMessage(responseSwalError.message)
     } else if(responseSwalSuccess.status && !props.loading){
-        return successHandle.successSwalData(responseSwalSuccess.message)
+        return handleSuccess.successSwalData(responseSwalSuccess.message)
     }
 })
 

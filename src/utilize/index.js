@@ -1,4 +1,9 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const utilize = {
 
@@ -16,7 +21,8 @@ export const utilize = {
 
     convertTimeDate(date){
         if(dayjs(date)){
-            return dayjs(date).format('DD MMMM YYYY');
+            const timeZone = dayjs.tz.guess() 
+            return  dayjs.utc(date).tz(timeZone, true).format("YYYY-MM-DD");
         }
         return '';
     },

@@ -9,7 +9,7 @@
       <section class="bg-gray-50 dark:bg-gray-900 flex flex-row h-screen">
         <template v-if="nameRoutePath !== 'login'">
           <Sidebar></Sidebar>
-          <div class="w-full flex mt-[8rem] lg:mt-[10rem] relative overflow-y-auto">
+          <div class="w-full flex mt-[8rem] lg:mt-[10rem] relative justify-center relative overflow-x-hidden  overflow-y-auto">
             <div class="lg:w-64 lg:ml-10 ">
             </div>
             <RouterView />

@@ -285,7 +285,7 @@ const submitEvent = () => {
         localStorage.setItem('formData', JSON.stringify(payload))
         clearEvent()
     } else  {
-        HandleError.errorMessage('Please fill all input required')
+        handleError.errorMessage('Please fill all input required')
     }
 }
 
