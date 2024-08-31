@@ -12,17 +12,10 @@
                             @click="sidebarOpen(getIsSidebarOpen)"  
                             class="py-2 focus:outline-none focus:bg-gray-600 md:hidden">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"
-                                stroke="gray">
+                                stroke="white">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                             </svg>
                         </button>
-                        <h3 class="lg:text-4xl md:text-4xl text-xl text-white font-bold py-5 hidden lg:inline">
-                            <span
-                                class=" cursor-pointer" 
-                                @click="goBack()">
-                                App Todo List
-                            </span> 
-                        </h3>
                     </div>
                     <div class="w-1/2 flex justify-end items-center">
                         <div class="flex item-center mr-6">
@@ -171,9 +164,7 @@ function logout(){
     });
 }
 
-function goBack(){
-    router.push('/')
-}
+
 
 function goToProfile(){
     router.push('/profile')

@@ -1,52 +1,63 @@
 <template>
     <div class="w-full mx-6">
-        <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            User name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            First name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            last name
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            email
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr 
-                        v-for="(data, index) in datas"
-                        :key="index"
-                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{data.user_name}}
-                        </th>
-                        <td class="px-6 py-4">
-                            {{data.first_name}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{data.last_name}}
-                        </td>
-                        <td class="px-6 py-4">
-                            {{data.email}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div id="ChartMonthlyOrder" class="relative overflow-x-auto">
+            <div class="p-4">
+                <div class="p-4 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                    <ChartMonthlyOrder></ChartMonthlyOrder>
+                </div>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-2 mt-6">
+            <div id="ChartYearlyOrder" class="relative overflow-x-auto">
+                <div class="px-4 py-4">
+                    <div class="p-4 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                        <ChartYearlyOrder></ChartYearlyOrder>
+                    </div>
+                </div>
+            </div>
+            <div id="ChartCompareOrder" class="relative overflow-x-auto">
+                <div class="px-4 lg:pr-4 py-4">
+                    <div class="p-4 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                        <ChartCompareOrder></ChartCompareOrder>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ChartMonthlyOrder" class="relative overflow-x-auto">
+            <div class="p-4">
+                <div class="p-2 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                    <TableTopProduct></TableTopProduct>
+                </div>
+            </div>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-2 mt-6">
+            <div  class="relative overflow-x-auto">
+                <div class="px-4 py-4">
+                    <div class="p-4 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                        <TableTopBuyer></TableTopBuyer>
+                    </div>
+                </div>
+            </div>
+            <div  class="relative overflow-x-auto">
+                <div class="px-4 lg:pr-4 py-4">
+                    <div class="p-2 border rounded-lg bg-white shadow-lg overflow-x-auto">
+                        <TableTopStore></TableTopStore>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
-import { dataDummyEmployee } from '@/utilize/DataDummy';
+import ChartCompareOrder from './Chart/ChartCompareOrder.vue';
+import ChartMonthlyOrder from './Chart/ChartMonthlyOrder.vue';
+import ChartYearlyOrder from './Chart/ChartYearlyOrder.vue';
+import TableTopProduct from './Table/TableTopProduct.vue';
+import TableTopBuyer from './Table/TableTopBuyer.vue';
+import TableTopStore from './Table/TableTopStore.vue';
 
-const datas = ref(dataDummyEmployee)
 
 </script>
 

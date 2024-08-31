@@ -56,7 +56,7 @@ router.beforeEach((to, from, next) => {
   if (auth && !getToken) {
     next('/login');
   } else if (unauth && getToken) {
-    next('/tier-list');
+    next('/dashboard');
   } else {
     next();
   }

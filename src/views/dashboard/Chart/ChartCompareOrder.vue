@@ -1,3 +1,27 @@
+<template>
+  <div class="relative min-w-[800px]">
+    <div class="w-full flex justify-center">
+      <h2 class="text-2xl pb-24 text-center font-semibold">
+          Comparassion Tahunan
+      </h2>
+    </div>
+    <div class="w-full pt-2  min-h-[10rem]">
+      <div class="relative" v-if="getLoading">
+        <div
+            id="modal-bg" class="w-full h-full z-40 absolute top-0 absolute blur-background">
+        </div>
+        <div 
+            class="w-full h-[10rem] flex flex-col items-center gap-2 -translate-y-1/2 p-6 top-1/2 left-1/2 -translate-x-1/2 absolute z-20">
+            <img src="@/assets/icon/spinner.svg" alt="spinner">
+        </div>
+      </div>
+      <div v-if="!getLoading">
+        <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]"  />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {ref, onMounted, reactive, computed} from "vue";
 import Chart from 'primevue/chart';
@@ -10,6 +34,7 @@ onMounted(() => {
 //todo from API
 const chartDataRaw = reactive(summaryOrderComparison);
 const chartOptions = ref();
+const getLoading = ref(false)
 
 const chartData = computed(() => {
   const documentStyle = getComputedStyle(document.documentElement);
@@ -76,9 +101,6 @@ const setChartOptions = () => {
 }
 </script>
 
-<template>
-  <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]"  />
-</template>
 
 <style scoped>
 

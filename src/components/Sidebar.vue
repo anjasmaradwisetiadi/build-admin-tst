@@ -4,6 +4,15 @@
         :class="isSidebarOpen ? 'absolute z-30 bg-neutral-200 h-full top-0 left-0':'hidden'"
     >
         <nav class="space-y-2 w-64 h-full">
+            <div class="bg-neutral-500 pb-3 pt-8 mb-8 px-3">
+                <h3 class="lg:text-2xl text-xl text-white text-center font-bold py-6 inline">
+                    <span
+                        class=" cursor-pointer" 
+                        @click="goBack()">
+                        Your App
+                    </span> 
+                </h3>
+            </div>
             <RouterLink to="/dashboard" class="py-3 px-4 flex items-center hover:text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
@@ -42,6 +51,9 @@
 <script setup>
 import { ref, watch, onMounted, onUpdated, onBeforeMount, computed} from 'vue';
 import { useSidebarControlStore } from '@/stores/Sidebar';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const sidebarControlStore = useSidebarControlStore()
 
 let windowWidth = ref(window.innerWidth);
@@ -98,6 +110,10 @@ const closeModal = (data) =>{
     isSidebarOpen.value = data;
     isSidebarOpen.value = !isSidebarOpen.value
     sidebarControlStore.sidebarIsOpen(isSidebarOpen.value)
+}
+
+function goBack(){
+    router.push('/')
 }
 
 
