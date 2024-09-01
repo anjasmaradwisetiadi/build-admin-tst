@@ -18,7 +18,9 @@
                         </button>
                     </div>
                     <div class="w-1/2 flex justify-end items-center">
-                        <div class="flex item-center mr-6">
+                        <div
+                            v-if="getProfile?.name" 
+                            class="flex item-center mr-6">
                             <div class="w-12 h-12 rounded-full relative">
                                 <button class="cursor-pointer"
                                     @click="isOptionsExpanded = !isOptionsExpanded"
@@ -93,21 +95,13 @@ const getLogoutResponse = computed(()=>{
     return authStore.logoutResponse;
 })
 
-const getLoading = computed(()=>{
-    return authStore.loading;
-})
-
-const getProfile =computed(()=>{
-    return authStore.profileResponse
+const getProfile = computed(()=>{
+    return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
 })
 
 onBeforeMount(()=>{
     const paramsRoute = router.currentRoute.value.name;
     nameRoutePath.value = paramsRoute
-})
-
-onMounted(()=>{
-    authStore.profile();
 })
 
 watch(getIsSidebarOpen, (newValue, oldValue)=>{

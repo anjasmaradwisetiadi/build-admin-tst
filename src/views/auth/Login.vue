@@ -80,7 +80,7 @@ const getError = computed(()=>{
 
 watch(getLoginResponse, (newValue, oldValue)=>{
     if( newValue?.status === 200 && newValue?.data?.response_message.toLowerCase() === 'ok'){
-        Swal.fire({
+        return Swal.fire({
             title: "Success Login",
             text: "You will redirect to dashboard",
             icon: "success",
@@ -90,12 +90,11 @@ watch(getLoginResponse, (newValue, oldValue)=>{
             if (result.isConfirmed || result.isDismissed) {
                 authStore.loginResponse = null
                 authStore.loading = false;
-                
                 router.push('/dashboard')
             }
         })
-    } else if(newValue?.status !== 200) {
-        handleError.errorMessage(newValue?.message)
+    } else if(newValue?.status !== 200 && typeof(newValue?.status) !== 'undefined') {
+        return handleError.errorMessage(newValue?.message)
     } else {
         return
     }
