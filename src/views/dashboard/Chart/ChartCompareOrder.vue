@@ -15,17 +15,24 @@
             <img src="@/assets/icon/spinner.svg" alt="spinner">
         </div>
       </div>
-      <div v-if="!getLoading">
-        <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]"  />
+      <div class="relative" v-if="!getLoading && getError">
+        <div 
+            class="w-full h-[10rem] flex flex-col items-center gap-2 p-6 z-20 blur-background">
+            <div class="text-2xl">
+              Something Wrong call your admin !!!
+            </div>
+        </div>
+      </div>
+      <div v-if="!getLoading && !getError">
+        <Chart v-if="chartData" type="bar" :data="chartData" :options="chartOptions" class="h-[30rem]" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted, reactive, computed} from "vue";
+import {ref, onMounted, reactive, computed, watchEffect} from "vue";
 import Chart from 'primevue/chart';
-import {summaryMonthlyOrder, summaryOrderComparison, summaryYearlyOrder} from "@/utilize/DataDummy.js";
 import { useSummaryStore } from "@/stores/SummaryStore";
 
 const summaryStore = useSummaryStore()
@@ -33,7 +40,7 @@ const summaryStore = useSummaryStore()
 onMounted(() => {
   chartOptions.value = setChartOptions();
   // ******** trigger
-  // summaryStore.orderComparison()
+  summaryStore.orderComparison()
 });
 
 const getLoading = computed(()=>{
@@ -44,35 +51,36 @@ const getError = computed(()=>{
   return summaryStore.orderComparisonResponseError
 })
 
-const getResponse = computed(()=>{
-  return summaryStore.orderComparisonResponseError
-})
 
 //todo from API
-const chartDataRaw = reactive(summaryOrderComparison);
 const chartOptions = ref();
 
 const chartData = computed(() => {
-  const documentStyle = getComputedStyle(document.documentElement);
-
-  return {
-    labels: [`Perubahan Penjualan ${chartDataRaw.percentage}%`],
-    datasets: [
-      {
-        label: `Penjualan ${chartDataRaw.previous.month}`,
-        backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        data: [chartDataRaw.previous.amount]
-      },
-      {
-        label: `Penjualan ${chartDataRaw.current.month}`,
-        backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-        borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-        data: [chartDataRaw.current.amount]
-      }
-    ]
-  };
+  if(summaryStore.orderComparisonResponse){
+    const documentStyle = getComputedStyle(document.documentElement);
+    return {
+      labels: [`Perubahan Penjualan ${summaryStore.orderComparisonResponse?.percentage}%`],
+      datasets: [
+        {
+          label: `Penjualan ${summaryStore.orderComparisonResponse?.previous?.month}`,
+          backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
+          borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+          data: [summaryStore.orderComparisonResponse?.previous?.amount]
+        },
+        {
+          label: `Penjualan ${summaryStore.orderComparisonResponse?.current?.month}`,
+          backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
+          borderColor: documentStyle.getPropertyValue('--p-gray-500'),
+          data: [summaryStore.orderComparisonResponse?.current?.amount]
+        }
+      ]
+    };
+  }
 })
+
+watchEffect(() => 
+  chartData,
+ { immediate: true })
 
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);

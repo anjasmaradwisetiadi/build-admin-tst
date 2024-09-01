@@ -33,10 +33,11 @@ export const useSummaryStore = defineStore('summary', {
     async monthlyOrder(params){
       this.loadingMonthly = true;
       // it need params filter and sort on monthly order 
-      await instanceAxios.get(`common/v1/summaries/orders/monthly${params}`)
+      await instanceAxios.get(`common/v1/summaries/orders/monthly?${params.concatFilterParams}`)
           .then((response)=>{
               this.monthlyResponse = response.data
               this.loadingMonthly = false;
+              this.monthlyResponseError = false
           })
           .catch((error)=>{
               this.monthlyResponseError = true
@@ -46,10 +47,11 @@ export const useSummaryStore = defineStore('summary', {
     async yearlyOrder(params){
         this.loadingYearly = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`common/v1/summaries/orders/yearly${params}`)
+        await instanceAxios.get(`common/v1/summaries/orders/yearly?${params.concatFilterParams}`)
             .then((response)=>{
                 this.yearlyResponse = response.data
                 this.loadingYearly = false;
+                this.yearlyResponseError = false
             })
             .catch((error)=>{
                 this.yearlyResponseError = true
@@ -65,6 +67,7 @@ export const useSummaryStore = defineStore('summary', {
             .then((response)=>{
                 this.orderComparisonResponse = response.data
                 this.loadingOrderComparison = false;
+                this.orderComparisonResponseError = false
             })
             .catch((error)=>{
                 this.orderComparisonResponseError = true
@@ -75,10 +78,11 @@ export const useSummaryStore = defineStore('summary', {
     async topProduct(params){
         this.loadingTopProduct = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`common/v1/summaries/top/products${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/products?${params.concatFilterParams}`)
             .then((response)=>{
                 this.topProductResponse = response.data
                 this.loadingTopProduct = false;
+                this.topProductResponseError = false
             })
             .catch((error)=>{
                 this.topProductResponseError = true
@@ -89,10 +93,11 @@ export const useSummaryStore = defineStore('summary', {
     async topBuyer(params){
         this.loadingTopBuyer = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`common/v1/summaries/top/buyers${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/buyers?${params.concatFilterParams}`)
             .then((response)=>{
                 this.topBuyerResponse = response.data
                 this.loadingTopBuyer = false;
+                this.topBuyerResponseError = false
             })
             .catch((error)=>{
                 this.topBuyerResponseError = true
@@ -103,10 +108,11 @@ export const useSummaryStore = defineStore('summary', {
     async topStore(params){
         this.loadingTopStore = true;
         // it need params filter and sort on monthly order 
-        await instanceAxios.get(`common/v1/summaries/top/stores${params}`)
+        await instanceAxios.get(`common/v1/summaries/top/stores?${params.concatFilterParams}`)
             .then((response)=>{
                 this.topStoreResponse = response.data
                 this.loadingTopStore = false;
+                this.topStoreResponseError = false
             })
             .catch((error)=>{
                 this.topStoreResponseError = true

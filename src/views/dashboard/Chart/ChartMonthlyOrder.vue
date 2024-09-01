@@ -8,11 +8,11 @@
     <div class="w-full flex justify-end py-6 items-end">
       <div class="flex flex-col mr-2 w-32 lg:w-[10rem] mt-1.5">
           <span> Start Date </span>
-          <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" />
+          <DatePicker v-model="startDate" view="month" placeholder="Start Date"  :manualInput="false" dateFormat="mm/yy" />
       </div>
       <div class="flex flex-col mr-2 w-32 lg:w-[10rem] mt-1.5">
           <span> End Date </span>
-          <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" />
+          <DatePicker v-model="endDate" view="month" placeholder="End Date" :manualInput="false" dateFormat="mm/yy" />
       </div>
       <div class="mt-1.5 flex flex-col">
         <button class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600" @click="applyFilter()">APPLY</button>
@@ -28,8 +28,19 @@
             <img src="@/assets/icon/spinner.svg" alt="spinner">
         </div>
       </div>
-      <div  v-if="!getLoading">
-        <Chart type="bar" :data="chartData" :options="chartOptions" class="h-[30rem] overflow-x-auto w-full"  />
+      <div class="relative" v-if="!getLoading && getError">
+        <div
+            id="modal-bg" class="w-full h-full z-40 absolute top-0 absolute blur-background">
+        </div>
+        <div 
+            class="w-full h-[10rem] flex flex-col items-center gap-2 -translate-y-1/2 p-6 top-1/2 left-1/2 -translate-x-1/2 z-20">
+            <div class="text-2xl">
+              Something Wrong call your admin !!!
+            </div>
+        </div>
+      </div>
+      <div  v-if="!getLoading && !getError">
+        <Chart v-if="chartData" type="bar" :data="chartData" :options="chartOptions" class="h-[30rem] overflow-x-auto w-full"   />
       </div>
     </div>
   </div>
@@ -41,6 +52,7 @@ import Chart from 'primevue/chart';
 import {summaryMonthlyOrder} from "@/utilize/DataDummy.js";
 import DatePicker from 'primevue/datepicker';
 import { useSummaryStore } from "@/stores/SummaryStore";
+import dayjs from "dayjs";
 
 const summaryStore = useSummaryStore()
 
@@ -50,7 +62,7 @@ const endDate = ref(new Date());
 onMounted(() => {
   chartOptions.value = setChartOptions();
   // ******** trigger
-  // summaryStore.monthlyOrder(params)
+  summaryStore.monthlyOrder(pagePayload())
 });
 
 const getLoading = computed(()=>{
@@ -61,20 +73,17 @@ const getError = computed(()=>{
   return summaryStore.monthlyResponseError
 })
 
-const getResponse = computed(()=>{
-  return summaryStore.monthlyResponse
-})
-
 //todo from API
-const chartDataRaw = reactive(summaryMonthlyOrder);
 const chartOptions = ref();
 
 const chartData = computed(() => {
   const labels = [];
   const data = [];
-  for (let chartDataRawElement of chartDataRaw) {
-    labels.push(chartDataRawElement.month)
-    data.push(chartDataRawElement.orders)
+  if(summaryStore?.monthlyResponse?.items?.length){
+    for (let chartDataRawElement of summaryStore?.monthlyResponse?.items) {
+      labels.push(chartDataRawElement.month)
+      data.push(chartDataRawElement.orders)
+    }
   }
 
   return {
@@ -129,6 +138,31 @@ const setChartOptions = () => {
     }
   };
 }
+
+const applyFilter = () =>{
+  const pagePayloadFilter = pagePayload(
+    startDate.value,
+    endDate.value,
+  )
+  summaryStore.monthlyOrder(pagePayloadFilter)
+}
+
+const pagePayload = (
+  startDateFilter=(new Date('2024-01-12')),
+  endDateFilter=(new Date()),
+  )=>{
+    let concatFilterParams ='';
+    let urlParams  = new URLSearchParams(concatFilterParams.search);
+      if (startDateFilter !==''){
+          urlParams.set('start_month', dayjs(startDateFilter).format("YYYY-MM")) 
+      } 
+      if (endDateFilter !==''){
+          urlParams.set('end_month', dayjs(endDateFilter).format("YYYY-MM")) 
+      } 
+    return {
+      concatFilterParams : urlParams.toString()
+    }
+  }
 </script>
 
 

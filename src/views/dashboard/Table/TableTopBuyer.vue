@@ -3,7 +3,7 @@
         <div class="relative overflow-x-auto">
             <div class="p-4">
                 <div class="bg-blue-600 text-white py-2 px-4 rounded-t-md">
-                    <h1 class="text-lg font-semibold">Top Pembeli Table ({{ datas?.period }})</h1>
+                    <h1 class="text-lg font-semibold">Top Pembeli Table ({{ getResponse?.period }})</h1>
                 </div>
                 <div class="w-full p-4 border rounded-b-md bg-white">
                     <div class="w-full flex justify-end py-6 items-end">
@@ -27,7 +27,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <template v-if="!getLoading ">
                                     <tr
-                                        v-for="(data, index) in datas?.items"
+                                        v-for="(data, index) in getResponse?.items"
                                         :key="index"
                                     >
                                         <td class="px-6 py-4 whitespace-nowrap">{{ data?.name  }}</td>
@@ -35,7 +35,7 @@
                                         <td class="px-6 py-4 whitespace-nowrap">{{ data?.amount }}</td>
                                     </tr>
                                     <tr
-                                        v-if="!datas?.items?.length"
+                                        v-if="!getResponse?.items?.length"
                                     >
                                         <td class="px-6 py-4 whitespace-nowrap text-center" colspan="3">
                                             Data Not Found
@@ -66,19 +66,10 @@
 
 <script setup>
 import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, Teleport} from 'vue';
-import { dataDummyEmployee, topBuyer } from '@/utilize/DataDummy';
-const datas = ref(topBuyer)
-// const getDetailRespons = ref(detailOrders)
-import { useRouter } from 'vue-router';
-import { useCouponStore } from '@/stores/CS/OrdersStore';
-import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 import Select from 'primevue/select';
 import { useSummaryStore } from "@/stores/SummaryStore";
 
 const summaryStore = useSummaryStore()
-
-const router = useRouter();
-const couponStore = useCouponStore()
 
 const limit = ref({ name: 5})
 const limitOption = ref([
@@ -89,31 +80,37 @@ const limitOption = ref([
 
 onMounted(()=>{
   // ******** trigger
-  // summaryStore.topBuyer(params)
+  summaryStore.topBuyer(pagePayload())
 })
-
 
 const getLoading = computed(()=>{
   return summaryStore.loadingTopBuyer
-})
-
-const getError = computed(()=>{
-  return summaryStore.topBuyerResponseError
 })
 
 const getResponse = computed(()=>{
   return summaryStore.topBuyerResponse
 })
 
-// 
-// const detailOrders = () =>{
-//     const payloadSlug = router.currentRoute.value.params.id;
-//     couponStore.orderDetail(payloadSlug);
-// }
-// 
+const applyFilter = ()=>{
+    const pagePayloadFilter = pagePayload(
+        limit.value.name
+    )
 
+    summaryStore.topBuyer(pagePayloadFilter)
+}
 
-
+const pagePayload = (
+    limit=5,
+)=>{
+    let concatFilterParams ='';
+    let urlParams  = new URLSearchParams(concatFilterParams.search);
+        if(limit > 0){
+            urlParams.set('limit', limit) 
+        }
+    return {
+        concatFilterParams : urlParams.toString()
+    }
+}
 
 </script>
 
