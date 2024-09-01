@@ -2,6 +2,7 @@
     <div id="ModalCreateCoupoun">
         <div
             v-if=" props?.isOpenModal"
+            @click="onToggle(false)"
             id="modal-bg" class="w-full h-full z-50 fixed top-0 left-0 blur-background overflow-hidden">
         </div>
         <div
@@ -32,7 +33,7 @@
                             required
                             class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
                             placeholder="Name"
-                            :disabled="isEdit"
+                            :disabled="props.nameModal === 'detail_coupoun'"
                         />
                         <small v-if="isNameError" class="form-text invalid-feedback">Pleasse fill this field</small>
                     </div>
@@ -51,9 +52,10 @@
                             required
                             class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
                             placeholder="Code"
-                            :disabled="isEdit"
+                            :disabled="props.nameModal === 'detail_coupoun'"
                         />
                         <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                        <small v-if="!isCodeError && isCodeLength" class="form-text invalid-feedback">The code field must be 8 characters.</small>
                     </div>
                 </div>
                 <div class="flex flex-col mt-1.5">
@@ -61,8 +63,7 @@
                         Start Date*
                     </div>
                     <div class="w-full">
-                        <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" class="w-full" />
-                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                        <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'" />
                     </div>
                 </div>
                 <div class="flex flex-col mt-1.5">
@@ -70,13 +71,14 @@
                         End Date*
                     </div>
                     <div class="w-full">
-                        <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" class="w-full" />
-                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                        <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'"/>
                     </div>
                 </div>
             </main>
             <footer class="flex w-full justify-end px-6">
-                <div class="flex ">
+                <div
+                    v-if="props.nameModal !== 'detail_coupoun'" 
+                    class="flex ">
                     <button id="modal-close" class="py-2 px-6 bg-sky-400 rounded-lg text-white mb-7 mr-2"
                         @click="onToggle(true)"
                     > Submit </button>
@@ -95,13 +97,16 @@
   import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
   import { handleError } from '@/utilize/HandleError';
   import DatePicker from 'primevue/datepicker';
+  import { useCouponStore } from '@/stores/CS/CouponStore';
+  import { utilize } from '@/utilize';
+
+  const couponStore = useCouponStore()
 
   const props = defineProps({
     loading:{
         default: false
     },
     responseModal:{
-        type: Object,
         default() {
             return {
                 title: 'Something Wrong',
@@ -136,49 +141,77 @@
   
   const isNameError = ref(false)
   const isCodeError = ref(false)
+  const isCodeLength = ref (false)
+
+
+  const getDetailResponse = computed(()=>{
+    return couponStore.detailResponse
+  })
+
+  watch(getDetailResponse,(newValue, oldValue)=>{
+    if(newValue && (props.nameModal !== 'create_coupoun')){
+        code.value = newValue?.code
+        name.value = newValue?.name
+        startDate.value = new Date(newValue?.start_date)
+        endDate.value = new Date(newValue?.end_date)
+    }
+  })
 
   const checkValidty = () => {
-//         const nameValidty = nameActivity.value ? false : true
-// 
-//         isNameError.value = nameValidty
-// 
-//         return nameValidty
+        const codeValidty = code.value ? false : true
+        const nameValidty = name.value ? false : true
+        const codeLengthValidity  = code.value.length === 8 ? false: true
+
+        isCodeError.value = codeValidty
+        isNameError.value = nameValidty
+        isCodeLength.value = codeLengthValidity
+
+        return nameValidty || codeValidty ||codeLengthValidity
   }
     const resetState = () =>{
-        // isNameError.value = false
+        isNameError.value = false
+        isCodeError.value = false
+        isCodeLength.value = false
+        code.value = ''
+        name.value = ''
+        startDate.value = new Date(new Date('2024-01-12'))
+        endDate.value = new Date(new Date())
     }
 
   function onToggle(data) {
     const result = checkValidty()
-    const payload = {
+    const payloadModal = {
         name: props.nameModal,
         value: data
     }
 
     if(data){
         if(!result){
-//             if(selectedOption.value === 'activity_task'){
-//                 const payload = {
-//                     title: nameActivity.value,
-//                     type: 'activity_task'
-//                 }
-//                 activitiesStore.activitiesCreate(payload)
-//             } else {
-//                 const payload = {
-//                     title: nameActivity.value,
-//                     type: 'activity_text'
-//                 }
-//                 activitiesStore.activitiesCreate(payload)
-//             }
-// 
-//             resetState()
-//             emit('isOpenModelCloseGeneral', payload)   
+            if(props?.nameModal === 'create_coupoun'){
+                const payload = {
+                    code: code.value,
+                    name: name.value,
+                    start_date: utilize.convertTimeDate(startDate.value),
+                    end_date: utilize.convertTimeDate(endDate.value)
+                }
+                couponStore.couponCreate(payload)
+            } else {
+                const payload = {
+                    start_date: utilize.convertTimeDate(startDate.value),
+                    end_date: utilize.convertTimeDate(endDate.value)
+                }
+
+                couponStore.couponEdit(code.value, payload)
+            }
+
+            resetState()
+            emit('isOpenModelCloseGeneral', payloadModal)   
         } else {
-            handleError.errorMessage('Please fill required input')
+            handleError.errorMessage('Something Wrong ')
         }
     } else {
         resetState()
-        emit('isOpenModelCloseGeneral', payload)   
+        emit('isOpenModelCloseGeneral', payloadModal)   
     }
 }
 </script>

@@ -115,7 +115,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.invoice_no }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.grandtotal }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.buyer?.name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.store?.store }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.store?.name }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.coupon?.name }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         
@@ -183,7 +183,6 @@
     import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
     import { useRouter } from 'vue-router';
     import Paginator from 'primevue/paginator';
-
 
     const couponStore = useCouponStore()
     const router = useRouter();
@@ -320,7 +319,7 @@
 
     const onPageChange = (event)=>{
 
-            pageNumber.value = event.page
+            pageNumber.value = event.page + 1
             perRowsPageNumber.value = event.rows
 
             const pagePayloadFilter = pagePayload(

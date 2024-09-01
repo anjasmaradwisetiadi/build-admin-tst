@@ -93,7 +93,7 @@
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
-                                    v-for="(data, index) in datas?.items"
+                                    v-for="(data, index) in getCoupounResponse?.items"
                                     :key="index"
                                 >
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.code }}</td>
@@ -118,20 +118,20 @@
                                     </td>
                                 </tr>
                                 <tr
-                                    v-if="!getLoading && !datas?.items.length"
+                                    v-if="!getLoading && !getCoupounResponse?.items.length"
                                 >
                                     <td class="px-6 py-4 whitespace-nowrap text-center" colspan="6">
                                         Data Not Found
                                     </td>
                                 </tr>
                                 <tr
-                                    v-if="datas?.total>10"
+                                    v-if="getCoupounResponse?.total>10"
                                 >
                                     <td 
                                         class="px-6 py-4 whitespace-nowrap bg-gray-100" colspan="6">
                                         <Paginator 
                                             :rows="perRowsPageNumber" 
-                                            :totalRecords="datas?.total" 
+                                            :totalRecords="getCoupounResponse?.total" 
                                             :rowsPerPageOptions="[10, 20, 30]"
                                             @page="onPageChange"
                                         >
@@ -151,11 +151,11 @@
         id="ModalEvent" 
         class="z-40"
         to="body"
-        v-if="getLoading"
      >
         <LoadingAndAlert
             :loading="getLoading"
             :responseSwalError="getError"
+            :responseSwalSuccess="getSuccess"
         >
         </LoadingAndAlert>
      </Teleport>
@@ -164,6 +164,7 @@
         :nameModal="getNameModal" 
         @isOpenModelCloseGeneral="isOpenModelCloseServer"
         :responseModal="getResponseModalGlobal" 
+        :id="idEdit"
      >
 
      </ModalCreateCoupoun>
@@ -174,13 +175,14 @@
     import { dataDummyEmployee, listCoupoun } from '@/utilize/DataDummy';
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
-    import { useCouponStore } from '@/stores/CS/OrdersStore';
+    import { useCouponStore } from '@/stores/CS/CouponStore';
     import { utilize } from '@/utilize';
     import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
     import { useRouter } from 'vue-router';
     import Paginator from 'primevue/paginator';
     import ModalCreateCoupoun from './ModalCreateCoupoun.vue';
     import { useFormDataModalStore } from '@/stores/FormDataModalStore';
+    import { handleSuccess } from '@/utilize/HandleSuccess';
 
     const formDataModalStore = useFormDataModalStore()
     const couponStore = useCouponStore()
@@ -189,15 +191,16 @@
     const datas = ref(listCoupoun)
     const pageNumber = ref(1)
     const perRowsPageNumber = ref(10)
-    const selectedSortBy = ref({ name: 'Grand Total', value: 'grandtotal' });
-    const selectedSortDirection = ref({ name: 'Desc', value: 'desc' });
-    const selectedSearchBy = ref({ name: 'Name', value: 'name' })
+    const selectedSortBy = ref({ name: 'Name', value: 'name' });
+    const selectedSortDirection = ref({ name: 'Ascending', value: 'asc' });
+    const selectedSearchBy = ref( { name: 'Code', value: 'code' })
     const searchQuery = ref('');
+    const idEdit = ref('');
 
 
     const dataSortDirection = ref([
-        { name: 'Asc', value: 'asc' },
-        { name: 'Desc', value: 'desc' },
+        { name: 'Ascending', value: 'asc' },
+        { name: 'Descending', value: 'desc' },
     ]);
     const dataSortBy = ref([
         { name: 'Name', value: 'name' },
@@ -212,20 +215,26 @@
         return couponStore.loading
     })
 
-    const getOrdersResponse = computed(()=>{
-        return couponStore.ordersResponse
+    const getCoupounResponse = computed(()=>{
+        return couponStore.couponResponse
     })
 
     const getError = computed(()=>{
         return couponStore.errorResponse
     })
 
-    watchEffect(() => 
-        getOrdersResponse,
-    { immediate: true })
+    const getSuccess = computed(()=>{
+        if(couponStore?.updateResponse?.message === 'update'){
+            couponStore.couponList(pagePayload())
+            return couponStore?.updateResponse
+        } else if(couponStore?.createResponse?.message === 'create'){
+            couponStore.couponList(pagePayload())
+            return couponStore?.createResponse
+        }
+    })
 
     onMounted(()=>{
-        // couponStore.orderList(pagePayload())
+        couponStore.couponList(pagePayload())
     })
 
     //********** */ form modal data trigger response 
@@ -248,18 +257,18 @@
             perRowsPageNumber.value,
             selectedSortBy.value.value,
             selectedSortDirection.value.value,
-            searchBy.value,
+            selectedSearchBy.value.value,
             searchQuery.value
         )
-        couponStore.orderList(pagePayloadFilter)
+        couponStore.couponList(pagePayloadFilter)
     }
 
     const pagePayload = (
         page=1,
         perPage=10,
-        sortByFilter='grandtotal',
-        sortDirectionFilter = 'desc',
-        searchByFilter='invoice_no',
+        sortByFilter='name',
+        sortDirectionFilter = 'asc',
+        searchByFilter='code',
         searchQueryFilter=''
     ) => {
         let concatFilterParams ='';
@@ -291,16 +300,17 @@
     const applyReset = () =>{
         pageNumber.value = 1
         perRowsPageNumber.value = 10
-        selectedSortBy.value = { name: 'Grand Total', value: 'grandtotal' }
-        selectedSortDirection.value = { name: 'Desc', value: 'desc' }
-        searchBy.value = 'invoice_no'
+        selectedSortBy.value = { name: 'Name', value: 'name' } 
+        selectedSortDirection.value = { name: 'Ascending', value: 'asc' }
+        selectedSearchBy.value = { name: 'Code', value: 'code' }
         searchQuery.value = ''
-        couponStore.orderList(pagePayload())
+
+        couponStore.couponList(pagePayload())
     }
 
     const onPageChange = (event)=>{
 
-            pageNumber.value = event.page
+            pageNumber.value = event.page + 1
             perRowsPageNumber.value = event.rows
 
             const pagePayloadFilter = pagePayload(
@@ -308,13 +318,14 @@
                 event.rows,
                 selectedSortBy.value.value,
                 selectedSortDirection.value.value,
-                searchBy.value,
+                selectedSearchBy.value.value,
                 searchQuery.value
             )
-            couponStore.orderList(pagePayloadFilter)
+            couponStore.couponList(pagePayloadFilter)
     }
 
     const goToUpdate = (id) =>{
+        couponStore.couponDetail(id)
         const isOpenModalGlobal = true;
         const nameModal ='update_coupoun';
         const responseModalGlobal = {
@@ -331,6 +342,7 @@
     }
 
     const goToDetail = (id)=>{
+        couponStore.couponDetail(id)
         const isOpenModalGlobal = true;
         const nameModal ='detail_coupoun';
         const responseModalGlobal = {
@@ -344,6 +356,7 @@
             'responseModalGlobal': responseModalGlobal
         }
         formDataModalStore.onActivatedModal(payload)
+
     }
 
     const createData = ()=>{
@@ -363,7 +376,8 @@
     }
 
     const isOpenModelCloseServer = (event) =>{
-        formDataModalStore.onDeactivatedModal()
+        formDataModalStore.onDeactivatedModal();
+        couponStore.resetData();
     }
 
 </script>

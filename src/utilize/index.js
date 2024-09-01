@@ -21,8 +21,7 @@ export const utilize = {
 
     convertTimeDate(date){
         if(dayjs(date)){
-            const timeZone = dayjs.tz.guess() 
-            return  dayjs.utc(date).tz(timeZone, true).format("YYYY-MM-DD");
+            return dayjs(date).format("YYYY-MM-DD");
         }
         return '';
     },
