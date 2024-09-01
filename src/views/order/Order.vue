@@ -112,11 +112,11 @@
                                     v-for="(data, index) in getOrdersResponse?.items"
                                     :key="index"
                                 >
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.invoice_no }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.grandtotal }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.buyer?.name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.store?.name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.coupon?.name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.invoice_no) }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.formatRupiah(data?.grandtotal)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.buyer?.name)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.store?.name)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.coupon?.name)}}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         
                                         <a  

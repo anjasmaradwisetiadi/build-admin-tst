@@ -5,7 +5,7 @@
                 <div class="w-full">
                     <div class="block bg-white space-y-3 p-4 rounded-lg shadow">
                         <p class="underline">{{ getDetailRespons?.invoice_no }}</p>
-                        <h1 class="text-3xl">Total : {{ getDetailRespons?.grandtotal }}</h1>
+                        <h1 class="text-3xl">Total : {{ utilize.formatRupiah(getDetailRespons?.grandtotal)}}</h1>
                     </div>
                 </div>
             </div>
@@ -15,20 +15,20 @@
                 <div class="grid lg:grid-cols-3 gap-3">
                     <div class="block bg-white space-y-3 p-4 rounded-lg shadow">
                         <h1 class="text-3xl">Buyer</h1>
-                        <p class="leading-3">Name: {{getDetailRespons?.buyer?.name}}</p>
-                        <p class="leading-3">Phone: {{getDetailRespons?.buyer?.phone}}</p>
+                        <p class="leading-3">Name: {{utilize.handleEmptyString(getDetailRespons?.buyer?.name)}}</p>
+                        <p class="leading-3">Phone: {{utilize.handleEmptyString(getDetailRespons?.buyer?.phone) }}</p>
                     </div>
                     <div class="block bg-white space-y-3 p-4 rounded-lg shadow">
                         <h1 class="text-3xl">Store</h1>
-                        <p class="leading-3">code: {{getDetailRespons?.store?.code}}</p>
-                        <p class="leading-3">name: {{getDetailRespons?.store?.name}}</p>
-                        <p class="leading-3">province: {{getDetailRespons?.store?.province}}</p>
-                        <p class="leading-3">city: {{getDetailRespons?.store?.city}}</p>
+                        <p class="leading-3">code: {{utilize.handleEmptyString(getDetailRespons?.store?.code) }}</p>
+                        <p class="leading-3">name: {{utilize.handleEmptyString(getDetailRespons?.store?.name) }}</p>
+                        <p class="leading-3">province: {{utilize.handleEmptyString(getDetailRespons?.store?.province) }}</p>
+                        <p class="leading-3">city: {{utilize.handleEmptyString(getDetailRespons?.store?.city) }}</p>
                     </div>
                     <div class="block bg-white space-y-3 p-4 rounded-lg shadow">
                         <h1 class="text-3xl">Coupon</h1>
-                        <p class="leading-3">code: {{getDetailRespons?.coupon?.code}}</p>
-                        <p class="leading-3">name: {{getDetailRespons?.coupon?.name}}</p>
+                        <p class="leading-3">code: {{utilize.handleEmptyString(getDetailRespons?.coupon?.code)}}</p>
+                        <p class="leading-3">name: {{utilize.handleEmptyString(getDetailRespons?.coupon?.name)}}</p>
                     </div>
                 </div>
             </div>
@@ -59,12 +59,12 @@
                                     v-for="(data, index) in getDetailRespons?.items"
                                     :key="index"
                                 >
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.product?.code }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.product?.name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.product?.category }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.product?.price }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.product?.code)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.product?.name)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.handleEmptyString(data?.product?.category)}}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.formatRupiah(data?.product?.price) }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ data?.qty }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">{{ data?.total_price }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">{{ utilize.formatRupiah(data?.total_price)}}</td>
                                 </tr>
                                 <tr
                                     v-if="!getLoading && !getDetailRespons?.items?.length"
@@ -103,6 +103,7 @@ import { onMounted, computed, Teleport} from 'vue';
 import { useRouter } from 'vue-router';
 import { useCouponStore } from '@/stores/CS/OrdersStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
+import { utilize } from '@/utilize';
 
 const router = useRouter();
 const couponStore = useCouponStore()

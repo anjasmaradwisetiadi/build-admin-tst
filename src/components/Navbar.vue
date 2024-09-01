@@ -43,12 +43,6 @@
                                         <li class="px-3 py-2 transition-colors duration-300 hover:bg-gray-200 text-left">
                                             Hello {{getProfile?.name}} 
                                         </li>
-                                        <li 
-                                            class="px-3 py-2 transition-colors duration-300 hover:bg-gray-200 text-left cursor-pointer"
-                                            @click="goToProfile()"
-                                        >
-                                            Go To Profile
-                                        </li>
                                     </ul>
                                 </transition>
                             </div>
@@ -161,6 +155,7 @@ function logout(){
 
 
 function goToProfile(){
+    console.log("trigger profile = ")
     router.push('/profile')
 }
 

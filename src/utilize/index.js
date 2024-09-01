@@ -6,6 +6,21 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 export const utilize = {
+    handleEmptyString(text){
+        if(!text?.length){
+            return '-'
+        }
+        return text
+    },
+
+    formatRupiah(value){
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0, // Tidak menampilkan desimal
+            maximumFractionDigits: 0
+          }).format(value);
+    },
 
     truncateWord(word, endString) {
         if(word.length >= endString){
@@ -32,5 +47,4 @@ export const utilize = {
         }
         return '--:--';
     },
-
 }
