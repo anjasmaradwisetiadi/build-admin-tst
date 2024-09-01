@@ -86,22 +86,13 @@
         <!-- Main Content -->
       </div>
     </div>
-
     <!-- it need loading and alert 2 different -->
-    <!-- <LoadingAndAlert
+    <LoadingAndAlertProfile
         :loading="getLoading"
         :responseSwalError="getError"
-        :responseSwalSuccess="getSuccess"
+        :responseSwalSuccess="updatePasswordAndProfile"
     >
-    </LoadingAndAlert> -->
-
-    <!-- it need loading and alert 2 different -->
-    <!-- <LoadingAndAlert
-        :loading="getLoading"
-        :responseSwalError="getError"
-        :responseSwalSuccess="getSuccess"
-    >
-    </LoadingAndAlert> -->
+    </LoadingAndAlertProfile>
 
     <ModalUpdateProfile
         :isOpenModal="getIsOpenModalGlobal"
@@ -128,6 +119,7 @@
   import ModalUpdatePassword from './ModalUpdatePassword.vue'
   import { useAuthStore } from '@/stores/AuthStore';
   import { useFormDataModalStore } from '@/stores/FormDataModalStore';
+  import LoadingAndAlertProfile from './LoadingAndAlertProfile.vue';
   
   const authStore = useAuthStore()
   const formDataModalStore = useFormDataModalStore()
@@ -142,6 +134,20 @@
   
   const getProfile = computed(()=>{
       return authStore.profileResponse
+  })
+
+  const getError = computed(()=>{
+      return authStore.errorResponse
+  })
+
+  const updatePasswordAndProfile = computed(()=>{
+      if(authStore?.updatePasswordResponse?.message === 'update_password'){
+        authStore.profile();
+        return authStore.updatePasswordResponse
+      } else {
+        authStore.profile();
+        return authStore.updateProfileResponse
+      }
   })
 
   //********** */ form modal data trigger response 

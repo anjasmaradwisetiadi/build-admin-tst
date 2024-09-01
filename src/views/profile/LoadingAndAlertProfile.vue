@@ -47,7 +47,7 @@ const responseSwalDisplay = computed(() => {
     if(responseSwalError?.status && !props.loading){
         return handleError.errorMessage(responseSwalError.message)
     } else if(responseSwalSuccess?.status && !props.loading){
-        return handleSuccess.successSwalData(responseSwalSuccess.message)
+        return handleSuccess.successSwalPasswordAndProfile(responseSwalSuccess.message)
     }
 })
 

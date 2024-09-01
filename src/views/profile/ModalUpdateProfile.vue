@@ -2,6 +2,7 @@
     <div id="ModalUpdateProfile">
         <div
             v-if=" props?.isOpenModal && props?.nameModal === 'update_profile'"
+            @click="onToggle(false)"
             id="modal-bg" class="w-full h-full z-50 fixed top-0 left-0 blur-background overflow-hidden">
         </div>
         <div
@@ -18,7 +19,32 @@
                 </div>
             </header>
             <main class="w-full px-6 py-3">
-                <div> Testing Update Profile</div>
+                <div class="flex flex-col mt-1.5" >
+                    <div>
+                        Name*
+                    </div>
+                    <div>
+                        <input
+                            v-model="name"
+                            id="name"
+                            name="name"
+                            autocomplete="name"
+                            type="text"
+                            required
+                            class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
+                            placeholder="Name"
+                        />
+                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                    </div>
+                </div>
+                <div class="flex flex-col mt-1.5">
+                    <div>
+                        Image upload
+                    </div>
+                    <div class="w-full flex justify-start">
+                        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" @upload="onUpload" />
+                    </div>
+                </div>
             </main>
             <footer class="flex w-full justify-end px-6">
                 <div class="flex ">
@@ -39,12 +65,13 @@
 <script setup>
   import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
   import { handleError } from '@/utilize/HandleError';
+  import FileUpload from 'primevue/fileupload';
+
   const props = defineProps({
     loading:{
         default: false
     },
     responseModal:{
-        type: Object,
         default() {
             return {
                 title: 'Something Wrong',
@@ -73,6 +100,8 @@
     'isOpenModelCloseGeneral',
   ]);
 
+  const name = ref('');
+
   const checkValidty = () => {
 //         const nameValidty = nameActivity.value ? false : true
 // 
@@ -83,6 +112,10 @@
     const resetState = () =>{
         // isNameError.value = false
     }
+
+    const onUpload = () => {
+        // toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+    };
 
   function onToggle(data) {
     const result = checkValidty()
