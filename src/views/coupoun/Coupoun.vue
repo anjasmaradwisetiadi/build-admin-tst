@@ -8,6 +8,7 @@
                 <div class="p-4 border rounded-b-md bg-white">
                     <div class="flex justify-end space-x-2">
                         <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800" @click="applyReset()">RESET</button>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" @click="applyExport()">EXPORT</button>
                         <button class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" @click="applyFilter()">APPLY</button>
                         <button class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" @click="createData()">ADD</button>
                     </div>
@@ -183,6 +184,7 @@
     import ModalCreateCoupoun from './ModalCreateCoupoun.vue';
     import { useFormDataModalStore } from '@/stores/FormDataModalStore';
     import { handleSuccess } from '@/utilize/HandleSuccess';
+    import instanceAxios from '@/utilize/InstanceAxios';
 
     const formDataModalStore = useFormDataModalStore()
     const couponStore = useCouponStore()
@@ -263,6 +265,43 @@
         couponStore.couponList(pagePayloadFilter)
     }
 
+    const  applyExport = async () =>{
+        const payloadFilter = pagePayloadExcel(
+            selectedSortBy.value.value,
+            selectedSortDirection.value.value,
+            selectedSearchBy.value.value,
+            searchQuery.value
+        )
+        console.log('payloadFilter = ')
+        console.log(payloadFilter)
+
+        await instanceAxios.get(`customer-service/v1/coupons/export?${payloadFilter.concatFilterParams}`,
+            {
+                responseType: 'blob'
+            }
+        )
+            .then((response)=>{
+                // Membuat URL blob dari respons data
+                const blob = new Blob([response.data], { type: 'text/csv' });
+                const downloadUrl = window.URL.createObjectURL(blob);
+
+                // Membuat elemen <a> untuk memulai download
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.setAttribute('download', 'file.xlsx'); // Nama file yang di-download
+                document.body.appendChild(link);
+                link.click();
+                                // Membersihkan URL blob dan elemen <a>
+                link.remove();
+                window.URL.revokeObjectURL(downloadUrl);
+            })
+            .catch((error)=>{
+                console.error('Error downloading the file', error);
+                // this.errorResponse = true
+                // this.loading = false;
+            })
+    }
+
     const pagePayload = (
         page=1,
         perPage=10,
@@ -280,6 +319,33 @@
                 urlParams.set('page', page) 
             }
             if (sortByFilter !==''){
+                urlParams.set('sort_by', sortByFilter) 
+            }  
+            if (sortDirectionFilter !==''){
+                urlParams.set('sort_direction', sortDirectionFilter) 
+            } 
+            if (searchByFilter !==''){
+                urlParams.set('search_by', searchByFilter) 
+            } 
+            if (searchQueryFilter !==''){
+                urlParams.set('search_query', searchQueryFilter) 
+            } 
+
+            return {
+                concatFilterParams : urlParams.toString()
+            }
+    }
+
+    const pagePayloadExcel = (
+        sortByFilter='name',
+        sortDirectionFilter = 'asc',
+        searchByFilter='code',
+        searchQueryFilter=''
+    ) =>{
+        let concatFilterParams ='';
+        let urlParams  = new URLSearchParams(concatFilterParams.search);
+
+        if (sortByFilter !==''){
                 urlParams.set('sort_by', sortByFilter) 
             }  
             if (sortDirectionFilter !==''){
