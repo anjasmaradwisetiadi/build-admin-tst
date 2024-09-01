@@ -8,11 +8,11 @@
     <div class="w-full flex justify-end py-6 items-end">
       <div class="flex flex-col mr-2 w-32 lg:w-[10rem] mt-1.5">
           <span> Start Date </span>
-          <DatePicker v-model="startDate" view="month" placeholder="Start Date"  :manualInput="false" dateFormat="mm/yy" />
+          <DatePicker v-model="startDate" :maxDate="endDate" view="month" placeholder="Start Date"  :manualInput="false" dateFormat="mm/yy" />
       </div>
       <div class="flex flex-col mr-2 w-32 lg:w-[10rem] mt-1.5">
           <span> End Date </span>
-          <DatePicker v-model="endDate" view="month" placeholder="End Date" :manualInput="false" dateFormat="mm/yy" />
+          <DatePicker v-model="endDate" :minDate="startDate" view="month" placeholder="End Date" :manualInput="false" dateFormat="mm/yy" />
       </div>
       <div class="mt-1.5 flex flex-col">
         <button class="bg-yellow-500 text-white px-6 py-2 rounded hover:bg-yellow-600" @click="applyFilter()">APPLY</button>
@@ -47,16 +47,15 @@
 </template>
 
 <script setup>
-import {ref, onMounted, reactive, computed} from "vue";
+import {ref, onMounted, computed} from "vue";
 import Chart from 'primevue/chart';
-import {summaryMonthlyOrder} from "@/utilize/DataDummy.js";
 import DatePicker from 'primevue/datepicker';
 import { useSummaryStore } from "@/stores/SummaryStore";
 import dayjs from "dayjs";
 
 const summaryStore = useSummaryStore()
 
-const startDate = ref(new Date('2024-01-12'));
+const startDate = ref(new Date('2024-08-12'));
 const endDate = ref(new Date());
 
 onMounted(() => {

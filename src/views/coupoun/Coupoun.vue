@@ -172,25 +172,18 @@
 </template>
 
 <script setup>
-    import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, watchEffect, Teleport} from 'vue';
-    import { dataDummyEmployee, listCoupoun } from '@/utilize/DataDummy';
+    import { ref, onMounted, computed, Teleport} from 'vue';
     import Select from 'primevue/select';
-    import DatePicker from 'primevue/datepicker';
     import { useCouponStore } from '@/stores/CS/CouponStore';
-    import { utilize } from '@/utilize';
     import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
-    import { useRouter } from 'vue-router';
     import Paginator from 'primevue/paginator';
     import ModalCreateCoupoun from './ModalCreateCoupoun.vue';
     import { useFormDataModalStore } from '@/stores/FormDataModalStore';
-    import { handleSuccess } from '@/utilize/HandleSuccess';
     import instanceAxios from '@/utilize/InstanceAxios';
 
     const formDataModalStore = useFormDataModalStore()
     const couponStore = useCouponStore()
-    const router = useRouter();
 
-    const datas = ref(listCoupoun)
     const pageNumber = ref(1)
     const perRowsPageNumber = ref(10)
     const selectedSortBy = ref({ name: 'Name', value: 'name' });
@@ -272,8 +265,6 @@
             selectedSearchBy.value.value,
             searchQuery.value
         )
-        console.log('payloadFilter = ')
-        console.log(payloadFilter)
 
         await instanceAxios.get(`customer-service/v1/coupons/export?${payloadFilter.concatFilterParams}`,
             {
@@ -297,8 +288,6 @@
             })
             .catch((error)=>{
                 console.error('Error downloading the file', error);
-                // this.errorResponse = true
-                // this.loading = false;
             })
     }
 
@@ -449,11 +438,4 @@
 </script>
 
 <style scoped>
-    .page-not-found{
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        display: flex;
-    }
 </style>

@@ -7,7 +7,6 @@ export const useFormDataModalStore = defineStore('formDataModalStore', {
       nameModal : '',
       responseModalGlobal: null,
       idData: ''
-      // loading: false,
     }
   },
 

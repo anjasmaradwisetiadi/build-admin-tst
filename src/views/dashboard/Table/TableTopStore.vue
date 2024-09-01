@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, Teleport} from 'vue';
+import { ref, onMounted, computed} from 'vue';
 import Select from 'primevue/select';
 import { useSummaryStore } from "@/stores/SummaryStore";
 

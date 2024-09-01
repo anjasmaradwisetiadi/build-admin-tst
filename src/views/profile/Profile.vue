@@ -114,7 +114,7 @@
   </template>
   
   <script setup>
-  import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
+  import { computed, onMounted} from 'vue';
   import ModalUpdateProfile from './ModalUpdateProfile.vue';
   import ModalUpdatePassword from './ModalUpdatePassword.vue'
   import { useAuthStore } from '@/stores/AuthStore';

@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { computed, watch, watchEffect } from 'vue';
+import { computed } from 'vue';
 import { handleSuccess } from '@/utilize/HandleSuccess';
 import { handleError } from '@/utilize/HandleError';
 

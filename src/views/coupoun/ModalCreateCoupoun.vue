@@ -62,8 +62,8 @@
                     <div>
                         Start Date*
                     </div>
-                    <div class="w-full">
-                        <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'" />
+                    <div class="w-full"> 
+                        <DatePicker v-model="startDate" :maxDate="endDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'" />
                     </div>
                 </div>
                 <div class="flex flex-col mt-1.5">
@@ -71,7 +71,7 @@
                         End Date*
                     </div>
                     <div class="w-full">
-                        <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'"/>
+                        <DatePicker v-model="endDate" :minDate="startDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" class="w-full" :disabled="props.nameModal === 'detail_coupoun'"/>
                     </div>
                 </div>
             </main>
@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-  import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
+  import { ref, watch, computed } from 'vue';
   import { handleError } from '@/utilize/HandleError';
   import DatePicker from 'primevue/datepicker';
   import { useCouponStore } from '@/stores/CS/CouponStore';
@@ -217,11 +217,5 @@
 </script>
 
 <style scoped>
-    .page-not-found{
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        display: flex;
-    }
+
 </style>

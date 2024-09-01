@@ -99,10 +99,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, Teleport} from 'vue';
-import { dataDummyEmployee } from '@/utilize/DataDummy';
-const datas = ref(dataDummyEmployee)
-// const getDetailRespons = ref(detailOrders)
+import { onMounted, computed, Teleport} from 'vue';
 import { useRouter } from 'vue-router';
 import { useCouponStore } from '@/stores/CS/OrdersStore';
 import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
@@ -132,9 +129,6 @@ const detailOrders = () =>{
 onMounted(()=>{
     detailOrders();
 })
-
-
-
 
 </script>
 

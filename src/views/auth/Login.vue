@@ -50,13 +50,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, onMounted, onBeforeMount } from 'vue';
+import { ref, watch, computed} from 'vue';
 import { useRouter } from 'vue-router';
 import { utilize } from '@/utilize/index';
 import { handleError } from '@/utilize/HandleError';
 import { useAuthStore } from '@/stores/AuthStore';
 import Swal from 'sweetalert2';
-import LoadingAndAlert from '@/components/LoadingAndAlert.vue';
 
 const authStore = useAuthStore()
 const router = useRouter();
@@ -71,10 +70,6 @@ const getLoginResponse = computed(()=>{
 
 const getLoading = computed(()=>{
     return authStore.loading;
-})
-
-const getError = computed(()=>{
-    return authStore.errorResponse;
 })
 
 

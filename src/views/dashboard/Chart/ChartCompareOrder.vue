@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, reactive, computed, watchEffect} from "vue";
+import {ref, onMounted, computed, watchEffect} from "vue";
 import Chart from 'primevue/chart';
 import { useSummaryStore } from "@/stores/SummaryStore";
 

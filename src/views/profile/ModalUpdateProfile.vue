@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-  import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
+  import { ref, watch, computed} from 'vue';
   import { handleError } from '@/utilize/HandleError';
   import FileUpload from 'primevue/fileupload';
   import { useAuthStore } from '@/stores/AuthStore';

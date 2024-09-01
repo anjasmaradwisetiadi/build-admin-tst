@@ -48,11 +48,11 @@
                         </div>
                         <div class="flex flex-col mr-2 w-full lg:w-[10rem] mt-1.5">
                             <span> Start Date </span>
-                            <DatePicker v-model="startDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" />
+                            <DatePicker v-model="startDate" :maxDate="endDate" placeholder="Start Date"  :manualInput="false" dateFormat="dd/mm/yy" />
                         </div>
                         <div class="flex flex-col mr-2 w-full lg:w-[10rem] mt-1.5">
                             <span> End Date </span>
-                            <DatePicker v-model="endDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" />
+                            <DatePicker v-model="endDate" :minDate="startDate" placeholder="End Date" :manualInput="false" dateFormat="dd/mm/yy" />
                         </div>
                         <div class="flex flex-col mr-2 w-full lg:w-[10rem] mt-1.5">
                             <span> Sort by </span>
@@ -174,8 +174,7 @@
 </template>
 
 <script setup>
-    import { ref, watch, onMounted, onUpdated, onBeforeMount, computed, watchEffect, Teleport} from 'vue';
-    import { dataDummyEmployee, listOrders } from '@/utilize/DataDummy';
+    import { ref, onMounted, computed, watchEffect, Teleport} from 'vue';
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
     import { useCouponStore } from '@/stores/CS/OrdersStore';
@@ -187,7 +186,6 @@
     const couponStore = useCouponStore()
     const router = useRouter();
 
-    const datas = ref(dataDummyEmployee)
     const pageNumber = ref(1)
     const perRowsPageNumber = ref(10)
     const selectedSortBy = ref({ name: 'Grand Total', value: 'grandtotal' });
