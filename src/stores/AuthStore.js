@@ -103,10 +103,14 @@ export const useAuthStore = defineStore('auth', {
 		async profileUpdate(payload) {
 			this.loading = true;
 
-			await instanceAxios.put(`common/v1/auth/profile`, payload)
+			await instanceAxios.post(`common/v1/auth/profile`, 
+                payload,
+                {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
 				.then((response) => {
-					console.log("response = ")
-					console.log(response)
 					const payload = {
 						status: true,
 						message: 'update_profile'

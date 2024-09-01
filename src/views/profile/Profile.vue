@@ -164,6 +164,7 @@
 
   const updateProfile = () => {
     const isOpenModalGlobal = true;
+    authStore.profile();
     const nameModal ='update_profile';
     const responseModalGlobal = {
         title: 'Update Profile',

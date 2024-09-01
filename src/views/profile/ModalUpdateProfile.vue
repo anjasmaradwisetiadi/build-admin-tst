@@ -34,7 +34,7 @@
                             class="block w-full rounded-md border py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-gray-600 sm:text-sm sm:leading-6 pl-[8px]"
                             placeholder="Name"
                         />
-                        <small v-if="isCodeError" class="form-text invalid-feedback">Pleasse fill this field</small>
+                        <small v-if="isNameError" class="form-text invalid-feedback">Pleasse fill this field</small>
                     </div>
                 </div>
                 <div class="flex flex-col mt-1.5">
@@ -42,7 +42,12 @@
                         Image upload
                     </div>
                     <div class="w-full flex justify-start">
-                        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" @upload="onUpload" />
+                        <FileUpload mode="basic" name="demo[]" url="/api/upload" accept="image/*" :maxFileSize="1000000" @upload="onUpload" @select="onFileSelect" ref="" />
+                    </div>
+                    <div class="w-36 flex flex-col image-preview mt-4">
+                        <div class="">
+                            <img :src="imagePreview" alt="image" width="180px" height="180px">
+                        </div>
                     </div>
                 </div>
             </main>
@@ -66,7 +71,9 @@
   import { ref, watch, computed, onMounted, onBeforeMount, Teleport } from 'vue';
   import { handleError } from '@/utilize/HandleError';
   import FileUpload from 'primevue/fileupload';
+  import { useAuthStore } from '@/stores/AuthStore';
 
+  const authStore = useAuthStore()
   const props = defineProps({
     loading:{
         default: false
@@ -101,63 +108,81 @@
   ]);
 
   const name = ref('');
+  const imageFile = ref('');
+  const imagePreview = ref('')
+  const isNameError = ref('')
+
+  const getDetailResponse = computed(()=>{
+    return authStore.profileResponse
+  })
+
+  watch(getDetailResponse,(newValue, oldValue)=>{
+    if(newValue){
+        name.value = newValue?.name
+        imagePreview.value = newValue?.profile_image
+    }
+  })
 
   const checkValidty = () => {
-//         const nameValidty = nameActivity.value ? false : true
-// 
-//         isNameError.value = nameValidty
-// 
-//         return nameValidty
+        const nameValidty = name.value ? false : true
+
+        isNameError.value = nameValidty
+
+        return nameValidty
   }
     const resetState = () =>{
-        // isNameError.value = false
+        name.value = '';
+        imageFile.value = '';
+        imagePreview.value = ''
+        isNameError.value = false
     }
 
-    const onUpload = () => {
-        // toast.add({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+    const onFileSelect = ($event) => {
+        const dataImage = $event.files;
+
+        if(dataImage){
+            const imagePreviewUrl = dataImage[0] ? URL.createObjectURL(dataImage[0]) : null
+            imagePreview.value = imagePreviewUrl
+            imageFile.value = dataImage[0]
+        }
     };
 
   function onToggle(data) {
     const result = checkValidty()
-    const payload = {
+    const payloadModal = {
         name: props.nameModal,
         value: data
     }
 
     if(data){
         if(!result){
-//             if(selectedOption.value === 'activity_task'){
-//                 const payload = {
-//                     title: nameActivity.value,
-//                     type: 'activity_task'
-//                 }
-//                 activitiesStore.activitiesCreate(payload)
-//             } else {
-//                 const payload = {
-//                     title: nameActivity.value,
-//                     type: 'activity_text'
-//                 }
-//                 activitiesStore.activitiesCreate(payload)
-//             }
-// 
-//             resetState()
-//             emit('isOpenModelCloseGeneral', payload)   
+                const payload = {
+                    name: name.value,
+                }
+                payload['profile_image'] = imageFile.value
+                authStore.profileUpdate(payload)
+
+            resetState()
+            emit('isOpenModelCloseGeneral', payloadModal)   
         } else {
             handleError.errorMessage('Please fill required input')
         }
     } else {
         resetState()
-        emit('isOpenModelCloseGeneral', payload)   
+        emit('isOpenModelCloseGeneral', payloadModal)   
     }
 }
 </script>
 
 <style scoped>
-    .page-not-found{
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        display: flex;
+    .style-image-preview-wrap{
+        margin-top:10px;
+        width: 160px;
+    }
+
+    .style-image-preview-wrap-pointer{
+        text-decoration: none !important;
+        color: whitespace;
+        cursor: pointer;
     }
 </style>
